@@ -1,29 +1,55 @@
 ﻿import React, { Component } from 'react';
-import DatePicker from "react-date-picker";
-//import Cropper from 'react-cropper';
-import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
+import DatePicker from "react-16-bootstrap-date-picker";
 import Summernote from './Summernote';
 import UploadImage from './UploadImage';
+
 
 export default class UserInfo extends Component {
 
     state = {
         fileName: "No file selected",
         isDeleteShow: false,
-        startDate: new Date()
+        birthDate: new Date().toISOString(),
+        educationData: null,
+        educationValue: null
     }
+
+    componentDidMount = () => {
+        axios.get("http://192.168.2.44/Api/Employee/GetEducationList")
+            .then(result => {
+                this.setState({
+                    educationData: result.data
+                })
+            })
+    }
+    handleEducationChnage = (event) => {
+        this.setState({
+            educationValue: event.target.value
+        })
+    }
+
     uploadFile = (event) => {
         this.setState({
             fileName: event.target.files[0].name,
             isDeleteShow: true
         });
     }
+
     cancelUpload = () => {
         this.setState({
             fileName: "No file selected",
             isDeleteShow: false
         });
     }
+
+    handleDatepickerChange = (value, formattedValue) => {
+        this.setState({
+            birthDate: value,
+            formattedValue: formattedValue
+        });
+    }
+
     render() {
         let deleteStyle = {
             display: this.state.isDeleteShow ? "block" : "none"
@@ -77,7 +103,12 @@ export default class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Education :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="name" ref="name" />
+                                    <select className="form-control" id="ddEducation" onChange={this.handleEducationChnage}>
+                                        <option defaultValue>Select</option>
+                                        {this.state.educationData != null ? this.state.educationData.map(key => (
+                                            <option value={key.education_Id} key={key.education_Id}>{key.education_Name}</option>
+                                        )) : null}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +127,7 @@ export default class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Birth Date :</label>
                                 <div className="col-md-9">
-                                    <DatePicker calendarClassName="react-calendar" value={this.state.startDate} selected={this.state.startDate} />
+                                    <DatePicker value={this.state.birthDate} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
                                 </div>
                             </div>
                         </div>
