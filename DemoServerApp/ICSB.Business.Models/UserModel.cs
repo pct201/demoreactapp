@@ -9,7 +9,7 @@ namespace ICSB.Business.Models
     {
         public UserModel()
         {
-            EducationList = new List<SelectListItem>();
+            EducationList = new List<EducationModel>();
         }
 
         #region Properties
@@ -52,7 +52,7 @@ namespace ICSB.Business.Models
 
         public DateTime? Updated_date { get; set; }
 
-        public IList<SelectListItem> EducationList { get; set; }
+        public IList<EducationModel> EducationList { get; set; }
 
         public int total_records { get; set; }
 

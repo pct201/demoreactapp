@@ -7,7 +7,7 @@ using ICSB.DataContext;
 using System.Data;
 
 using System.Collections.ObjectModel;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ICSB.Business.Services
 {
@@ -19,75 +19,7 @@ namespace ICSB.Business.Services
         public UserServices()
         {
             this.PagingInformation = new Pagination() { PageSize = DefaultPageSize, PagerSize = DefaultPagerSize };
-        }           
-
-        /// <summary>
-        /// Bind model to script's parameter and execute procedure for inserting new user data.
-        /// </summary>
-        /// <param name="objUserModel"></param>
-        /// <param name="isCompanyRegister"></param>
-        /// <returns></returns>
-        public int AddUser(UserModel objUserModel)
-        {
-            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
-            parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
-            parameters.Add(new DBParameters() { Name = "@email_address", Value = objUserModel.Email, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@first_name", Value = objUserModel.First_name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@last_name", Value = objUserModel.Last_name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@mobile_phone_number", Value = objUserModel.Mobile_Number, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@education_id", Value = objUserModel.Education_Id, DBType = DbType.Int32 });
-            parameters.Add(new DBParameters() { Name = "@salary", Value = objUserModel.Salary, DBType = DbType.Decimal });
-            parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.Birth_Date, DBType = DbType.DateTime });
-            parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
-            parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = objUserModel.Profile_Picture, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@document", Value = objUserModel.Document, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@updated_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
-            return Convert.ToInt32(this.ExecuteProcedure("co.users_add", ExecuteType.ExecuteScalar, parameters));
         }
-
-        /// <summary>
-        /// Bind model to script's parameter and execute procedure for editing user data.
-        /// </summary>
-        /// <param name="objUserModel"></param>
-        /// <returns></returns>
-        public int EditUser(UserModel objUserModel)
-        {
-            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
-            parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });   
-            parameters.Add(new DBParameters() { Name = "@email_address", Value = objUserModel.Email, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@first_name", Value = objUserModel.First_name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@last_name", Value = objUserModel.Last_name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@mobile_phone_number", Value = objUserModel.Mobile_Number, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@education_id", Value = objUserModel.Education_Id, DBType = DbType.Int32 });
-            parameters.Add(new DBParameters() { Name = "@salary", Value = objUserModel.Salary, DBType = DbType.Decimal });
-            parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.Birth_Date, DBType = DbType.DateTime });
-            parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
-            parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = objUserModel.Profile_Picture, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@document", Value = objUserModel.Document, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@updated_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
-           this.ExecuteProcedure("co.users_update", ExecuteType.ExecuteScalar, parameters);            
-            return 0;
-        }
-
-        /// <summary>
-        /// checks whether email address exist in auth.logins table
-        /// </summary>
-        /// <param name="emailId"></param>
-        /// <returns></returns>
-        public virtual object isEmailAddressExist(string emailId)
-        {
-            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();            
-            parameters.Add(new DBParameters() { Name = "@email_address", Value = emailId, DBType = DbType.AnsiString });
-            return this.ExecuteProcedure("auth.login_find_by_email", ExecuteType.ExecuteScalar, parameters);
-        }
-
-       
 
         /// <summary>
         /// Fetch user list from database
@@ -95,13 +27,15 @@ namespace ICSB.Business.Services
         /// <param name="pageNo"></param>
         /// <param name="sortExpression"></param>
         /// <param name="sortDirection"></param>
-        /// <param name="userId"></param>
-        /// <param name="companyId"></param>
+        /// <param name="userId"></param>     
         /// <returns></returns>
-        public virtual IList<UserModel> GetUserList(int? pageNo, string sortExpression, string sortDirection)
+        public virtual List<UserModel> GetUserList(int? pageNo, string sortExpression, string sortDirection,int userId=0)
         {
 
-            Collection<DBParameters> parameters = new Collection<DBParameters>();           
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+
+            if(userId>0)
+                parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });
 
             if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
             {
@@ -118,28 +52,69 @@ namespace ICSB.Business.Services
         }
 
         /// <summary>
-        /// Fetch user list from database
-        /// </summary>     
-        /// <param name="userId"></param>
+        /// Add Or Update User Detail In Database.
+        /// </summary>
+        /// <param name="objUserModel"></param>    
         /// <returns></returns>
-        public virtual UserModel GetUserByID(int userId)
+        public int AddEditUser(UserModel objUserModel)
         {
-            Collection<DBParameters> parameters = new Collection<DBParameters>();
-            parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });
-            return this.ExecuteProcedure<UserModel>("[co].[user_list_get]", parameters).FirstOrDefault();
-        }
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
 
+            if (objUserModel.UserId > 0)
+                parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
+
+            parameters.Add(new DBParameters() { Name = "@email", Value = objUserModel.Email, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@first_name", Value = objUserModel.First_name, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@last_name", Value = objUserModel.Last_name, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@mobile_number", Value = objUserModel.Mobile_Number, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@education_id", Value = objUserModel.Education_Id, DBType = DbType.Int32 });
+            parameters.Add(new DBParameters() { Name = "@salary", Value = objUserModel.Salary, DBType = DbType.Decimal });
+            parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.Birth_Date, DBType = DbType.Date });
+            parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
+            parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = objUserModel.Profile_Picture, DBType = DbType.Binary });
+            parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@document", Value = objUserModel.Document, DBType = DbType.Binary });
+            parameters.Add(new DBParameters() { Name = "@created_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
+            return Convert.ToInt32(this.ExecuteProcedure("dbo.add_edit_user", ExecuteType.ExecuteScalar, parameters));
+        }
+        
 
         /// <summary>
         /// Fetch user list from database
         /// </summary>       
         /// <param name="userId"></param>       
         /// <returns></returns>
-        public virtual void DeleteUserById(int userId)
+        public virtual void DeleteUserById(string userIds)
         {
             Collection<DBParameters> parameters = new Collection<DBParameters>();
-            parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });
-            this.ExecuteProcedure<UserModel>("[co].[user_delete]", parameters);
+            parameters.Add(new DBParameters() { Name = "user_ids", Value = userIds, DBType = DbType.AnsiString });
+            this.ExecuteProcedure<UserModel>("[dbo].[user_delete]", parameters);
+        }
+
+        /// <summary>
+        /// checks whether email address exist in auth.logins table
+        /// </summary>
+        /// <param name="emailId"></param>
+        /// <returns></returns>
+        public virtual int isEmailAddressExist(string emailId)
+        {
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.AnsiString });
+            return Convert.ToInt32(this.ExecuteProcedure("dbo.user_email_check", ExecuteType.ExecuteScalar, parameters));
+        }
+
+
+        /// <summary>
+        /// Get EducationList.
+        /// </summary>
+        /// <param name="objUserModel"></param>    
+        /// <returns></returns>
+        public IList<EducationModel> GetEducationList()
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            return this.ExecuteProcedureWithPerameterwithoutPagination<EducationModel>("[dbo].[education_dropdown_get]", parameters).ToList();
         }
 
 
