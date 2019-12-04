@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ICSB.Business.Services;
 using ICSB.Business.Models;
+using System.Linq;
 using Microsoft.AspNetCore.Cors;
 
 namespace WebAPI.Controllers
 {
-   
+
     [ApiController]
     public class EmployeeController : ControllerBase
-    {
-        //private readonly UserServices userServices;
-        //public EmployeeController(UserServices _userServices)
-        //{
-        //   this.userServices = _userServices;
-        //}
-
+    {        
         // GET api/values
         [HttpGet]
         [Route("api/Employee/AllEmployeeDetails")]
@@ -43,17 +38,33 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (id > 0)
+                using (var userService = new UserServices())
                 {
-                    using (var userService = new UserServices())
-                    {
-                        return userService.GetUserByID(id);
+                    List<UserModel> userList = userService.GetUserList(0, null, null, id);
+                    if (userList.Count > 0)
+                        return userList.FirstOrDefault();
+                    else
+                    {                     
+                        return null;
                     }
                 }
-                else
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // GET api/values
+        [HttpGet]
+        [Route("api/Employee/GetEducationList")]
+        public IList<EducationModel> GetEducationList()
+        {
+            try
+            {
+                using (var userService = new UserServices())
                 {
-                    UserModel user = new UserModel();
-                    return user;
+                    return userService.GetEducationList();
                 }
             }
             catch (Exception)
@@ -66,16 +77,12 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("api/Employee/InsertEmployeeDetails")]
         public int InsertEmployeeDetails(UserModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return 0;
-            }
+        {           
             try
             {
                 using (var userService = new UserServices())
                 {
-                    return userService.AddUser(model);
+                    return userService.AddEditUser(model);
                 }
             }
             catch (Exception e)
@@ -88,19 +95,13 @@ namespace WebAPI.Controllers
         [HttpPut]
         [Route("api/Employee/UpdateEmployeeDetails")]
         public int UpdateEmployeeDetails(UserModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return 0;
-            }
-
+        {     
             try
             {
                 using (var userService = new UserServices())
                 {
-                    return userService.EditUser(model);
+                    return userService.AddEditUser(model);
                 }
-
             }
             catch (Exception e)
             {
@@ -110,16 +111,16 @@ namespace WebAPI.Controllers
 
         // DELETE api/values/5
         [HttpDelete]
-        [Route("api/Employee/DeleteEmaployee/{id}")]
-        public bool DeleteEmaployee(int id)
+        [Route("api/Employee/DeleteEmaployee/{ids}")]
+        public bool DeleteEmaployee(string ids)
         {
-            if (id > 0)
+            if (!string.IsNullOrEmpty(ids))
             {
                 try
                 {
                     using (var userService = new UserServices())
                     {
-                        userService.DeleteUserById(id);
+                        userService.DeleteUserById(ids);
                         return true;
                     }
                 }

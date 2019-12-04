@@ -18,7 +18,7 @@ export default class UserList extends Component {
                 { data: "last_name", title: "Last Name" },
                 { data: "mobile_Number", title: "Contact Number" },
                 { data: "education_Name", title: "Education" },
-                { data: "salary", title: "salary" },
+                { data: "salary", title: "Salary" },
                 { data: "birth_Date", title: "Birth Date" },
                 {
                     data: "is_Married", title: "Married", render: function (data, type, row) {
