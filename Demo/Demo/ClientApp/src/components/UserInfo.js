@@ -18,8 +18,8 @@ class UserInfo extends Component {
             address: null,
             document: null,
             blog: null,
-            profilePicture: null,
-            birthDate: new Date().toISOString()
+            profile_picture: null,
+            birth_date: new Date().toISOString()
         },
         otherState: {
             fileName: "No file selected",
@@ -68,7 +68,7 @@ class UserInfo extends Component {
         this.setState({
             mainState: {
                 ...this.state.mainState,
-                birthDate: value,
+                birth_date: value,
                 formattedValue: formattedValue
             }
         });
@@ -116,7 +116,7 @@ class UserInfo extends Component {
             mainState: {
                 ...this.state.mainState,
                 blog: this.props.summernotedata,
-                profilePicture: this.props.cropperdata
+                profile_picture: this.props.cropperdata
             }
         });
     }
@@ -199,7 +199,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Birth Date :</label>
                                 <div className="col-md-9">
-                                    <DatePicker id="birth_date" ref="birth_date" value={this.state.mainState.birthDate} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
+                                    <DatePicker id="birth_date" ref="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
                                 </div>
                             </div>
                         </div>
