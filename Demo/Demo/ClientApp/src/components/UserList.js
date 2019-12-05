@@ -13,7 +13,7 @@ export default class UserList extends Component {
         super(props);
         this.state = {
             reload: false,
-            warningMsg:"Are you to delete selected record?",
+            warningMsg: "Are you to delete selected record?",
             isShow: false,
             error: false,
             errorMsg: "Please select at least one record to delete",
@@ -113,7 +113,7 @@ export default class UserList extends Component {
                         $('#main').find('th > input:checkbox').prop('checked', false);
                     }
                     else {
-                        if ($('#main').find('td >input:checkbox').length == $('#main').find('td >input:checkbox:checked').length) {
+                        if ($('#main').find('td >input:checkbox').length === $('#main').find('td >input:checkbox:checked').length) {
                             $('#main').find('th > input:checkbox').prop('checked', true);
                         }
                     }
@@ -143,11 +143,11 @@ export default class UserList extends Component {
 
     deleteConfirmation(e) {
         var table = this.refs.main;
-        var inputs = table.querySelectorAll("td input[type='checkbox']");  
+        var inputs = table.querySelectorAll("td input[type='checkbox']");
         var selectedRecord = 0;
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].checked) {
-                selectedRecord= selectedRecord + 1;
+                selectedRecord = selectedRecord + 1;
             }
         }
         if (selectedRecord <= 0) {
@@ -162,10 +162,10 @@ export default class UserList extends Component {
                 ...this.state, isShow: true
             })
         }
-        
+
     }
     deleteUser(e) {
-       
+
         var table = this.refs.main;
         var inputs = table.querySelectorAll("td input[type='checkbox']");
         let userIds = [];
@@ -176,7 +176,7 @@ export default class UserList extends Component {
         }
         console.log(JSON.stringify(userIds));
         axios.delete("http://192.168.2.44/Api/Employee/DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
-            if (result.status == 200) {
+            if (result.status === 200) {
                 this.setState({
                     reload: true,
                     isShow: false
