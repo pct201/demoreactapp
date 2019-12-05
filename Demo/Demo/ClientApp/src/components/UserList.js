@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import axios from 'axios';
+import ConfirmationPopup from './ConfirmationPopup';
+import WarningPopup from './WarningPopup';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -10,16 +12,24 @@ export default class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            reload: false
+            reload: false,
+            warningMsg:"Are you to delete selected record?",
+            isShow: false,
+            error: false,
+            errorMsg: "Please select at least one record to delete",
         }
         this.deleteUser = this.deleteUser.bind(this);
+        this.bindUserTable = this.bindUserTable.bind(this);
+        this.deleteConfirmation = this.deleteConfirmation.bind(this);
+        this.handleModelHide = this.handleModelHide.bind(this);
     }
 
-    async componentDidMount() {
+    async bindUserTable() {
         let res = await axios.get("http://192.168.2.44/Api/Employee/AllEmployeeDetails");
         $(this.refs.main).DataTable({
             dom: '<"top"l>rt<"bottom"ip><"clear">',
             data: res.data,
+            destroy: true,
             columns: [
                 {
                     title: "<input type='checkbox' className='togBtn' id='selectall' ref='selectall' name='selectall'>", data: "userId",
@@ -68,7 +78,7 @@ export default class UserList extends Component {
             emptyTable: "No Record Found",
             lengthMenu: [10, 20, 30, 40, 50],
             columnDefs: [
-                { "targets": [0, 4,6,7,10], "orderable": false }
+                { "targets": [0, 4, 6, 7, 10], "orderable": false }
             ],
             initComplete: function (setting, json) {
             },
@@ -112,40 +122,95 @@ export default class UserList extends Component {
         });
     }
 
+    componentDidMount() {
+        this.bindUserTable();
+    }
+
     componentWillUnmount() {
         $('.data-table-wrapper')
             .find('table')
             .DataTable()
             .destroy(true);
     }
+    componentDidUpdate() {
+        if (this.state.reload) {
+            this.bindUserTable();
+            this.setState({
+                reload: false
+            });
+        }
+    }
 
-     deleteUser(e) {
+    deleteConfirmation(e) {
+        var table = this.refs.main;
+        var inputs = table.querySelectorAll("td input[type='checkbox']");  
+        var selectedRecord = 0;
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].checked) {
+                selectedRecord= selectedRecord + 1;
+            }
+        }
+        if (selectedRecord <= 0) {
+            e.preventDefault();
+            this.setState({
+                ...this.state, error: true
+            })
+
+        } else {
+            e.preventDefault();
+            this.setState({
+                ...this.state, isShow: true
+            })
+        }
+        
+    }
+    deleteUser(e) {
+       
         var table = this.refs.main;
         var inputs = table.querySelectorAll("td input[type='checkbox']");
         let userIds = [];
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].checked) {
-                userIds = [...userIds, inputs[i].id];
+                userIds = [...userIds, { "user_id": inputs[i].id }];
             }
         }
-        let res =  axios.delete("http://192.168.2.44/Api/Employee/DeleteEmployee?" + userIds.toString());
-        if (res.status == 200) {
+        console.log(JSON.stringify(userIds));
+        axios.delete("http://192.168.2.44/Api/Employee/DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
+            if (result.status == 200) {
+                this.setState({
+                    reload: true,
+                    isShow: false
+                })
+            }
+        });
+    }
+
+    handleModelHide(e) {
+        if (this.state.error) {
             this.setState({
-                reload: true
-            });
+                ...this.state, error: false
+            })
+        }
+        else {
+            this.setState({
+                ...this.state, isShow: false
+            })
         }
     }
+
 
     render() {
         return (
             <div>
                 <div className="button-holder">
-                    <button className="cus-button primary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteUser} >Delete</button>
+                    <button className="cus-button primary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteConfirmation} >Delete</button>
                 </div>
                 <div className="table-resposive">
                     <table ref="main" id="main" className="darkgrid table table-bordered table-hover">
                     </table>
                 </div>
+                <ConfirmationPopup show={this.state.isShow} message={this.state.warningMsg} actionFunction={this.deleteUser} popupClose={this.handleModelHide} />
+                <WarningPopup show={this.state.error} message={this.state.errorMsg} popupClose={this.handleModelHide} />
             </div>
         )
     }
