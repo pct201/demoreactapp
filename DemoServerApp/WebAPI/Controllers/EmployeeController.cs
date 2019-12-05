@@ -111,7 +111,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/values/5
         [HttpDelete]
-        [Route("api/Employee/DeleteEmaployee/{ids}")]
+        [Route("api/Employee/DeleteEmployee")]
         public bool DeleteEmaployee(string ids)
         {
             if (!string.IsNullOrEmpty(ids))
