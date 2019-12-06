@@ -21,7 +21,8 @@
     "react-summernote": "^2.0.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "validator": "^12.1.0"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
