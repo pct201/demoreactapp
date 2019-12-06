@@ -118,6 +118,19 @@ export default class UserList extends Component {
                         }
                     }
                 });
+            },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr("id", aData['userId']);             
+                return nRow;
+            }     
+        });
+        // on click event for edit clause
+        $('#main tbody').on('click', 'td', function (i, e) {            
+            if (this.cellIndex != 0) {
+                var userId = $(this).parent().attr("id");
+                if (userId != undefined && userId != null) {
+                    this.props.history.push('/userinfo', userId)
+                }
             }
         });
     }

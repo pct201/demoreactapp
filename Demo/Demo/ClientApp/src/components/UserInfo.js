@@ -9,6 +9,7 @@ import validator from 'validator';
 class UserInfo extends Component {
     state = {
         mainState: {
+            userId:0,
             first_name: "",
             last_name: "",
             email: "",
@@ -36,6 +37,7 @@ class UserInfo extends Component {
     }
 
     componentDidMount = () => {
+       
         axios.get("http://192.168.2.44/Api/Employee/GetEducationList")
             .then(result => {
                 this.setState({
@@ -45,6 +47,38 @@ class UserInfo extends Component {
                     }
                 })
             })
+        let userId = this.props.match.params.id;
+        if (userId > 0) {
+            axios.get("http://192.168.2.44/Api/Employee/GetEmployeeDetailsById/" + userId)
+                .then(result => {                   
+                    this.setState({
+                        mainState: {
+                            userId:result.data.userId,
+                            first_name: result.data.first_name,
+                            last_name: result.data.last_name,
+                            email: result.data.email,
+                            mobile_number: result.data.mobile_number,
+                            education_id: result.data.education_Id,
+                            salary: result.data.salary,
+                            is_married: result.data.is_Married,
+                            address: result.data.address,
+                            document: result.data.document,
+                            blog: result.data.blog,
+                            profile_picture: result.data.profile_picture,
+                            birth_date: result.data.birth_Date
+                        }
+                    })
+                    //this.
+                    //this.refs.first_name.value = result.data.first_name;
+                    //this.refs.last_name.value = result.data.last_name;
+                    //this.refs.email.value = result.data.email;
+                    //this.refs.mobile_number.value = result.data.mobile_number;
+                    //this.refs.salary.value = result.data.salary;
+                    //this.refs.address.value = result.data.address
+                    //this.refs.birth_date.value=(result.data.birth_Date);
+                    //this.refs.is_married.checked = result.data.is_married;
+                })
+        }
     }
 
     uploadFile = (event) => {
@@ -71,7 +105,7 @@ class UserInfo extends Component {
         });
     }
 
-    handleDatepickerChange = (value, formattedValue) => {
+    handleDatepickerChange = (value, formattedValue) => {      
         this.setState({
             mainState: {
                 ...this.state.mainState,
@@ -163,7 +197,15 @@ class UserInfo extends Component {
         });
 
         if (this.handleValidation()) {
-            alert("success")
+            alert("success")            
+
+        //axios.post('https://localhost:44374/api/Employee/InsertEmployeeDetails', this.state.mainState, {
+        //    'Content-Type': 'application/json'
+        //})
+        //    .then(
+        //        this.props.history.push('/', null)
+        //    )
+
         }
     };
 
@@ -172,6 +214,8 @@ class UserInfo extends Component {
         let deleteStyle = {
             display: this.state.otherState.isDeleteShow ? "block" : "none"
         }
+
+        console.log(this.state.mainState);
 
         return (
             <div className="user-info">
@@ -184,7 +228,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">First Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" value={this.state.mainState.first_name} onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -192,7 +236,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Last Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" value={this.state.mainState.last_name} onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -203,7 +247,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Email :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" value={this.state.mainState.email} onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -211,7 +255,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Mobile No. :</label>
                                 <div className="col-md-9">
-                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" onChange={this.handleInputChange} />
+                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -222,9 +266,9 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Education :</label>
                                 <div className="col-md-9">
-                                    <select className="form-control" id="education_id" ref="education_id" onChange={this.handleInputChange}>
-                                        <option defaultValue>Select</option>
-                                        {this.state.otherState.educationData != null ? this.state.otherState.educationData.map(key => (
+                                    <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} onChange={this.handleInputChange}>
+                                        <option>Select</option>
+                                        {this.state.otherState.educationData != null ? this.state.otherState.educationData.map(key => (                                            
                                             <option value={key.education_Id} key={key.education_Id}>{key.education_Name}</option>
                                         )) : null}
                                     </select>
@@ -235,7 +279,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Salary :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="salary" ref="salary" onChange={this.handleInputChange} />
+                                    <input type="text" className="form-control" id="salary" ref="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -246,7 +290,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Birth Date :</label>
                                 <div className="col-md-9">
-                                    <DatePicker id="birth_date" ref="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
+                                    <DatePicker id="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
                                 </div>
                             </div>
                         </div>
@@ -254,9 +298,9 @@ class UserInfo extends Component {
                         <div className="col-md-6">
                             <div className="mvc-checkbox" style={{ 'paddingTop': '4px' }}>
                                 <div className="toggle-switch ipe-switch">
-                                    <label className="default-label" style={{ paddingRight: '10px !important' }}>Married</label>
+                                    <label className="default-label" style={{ paddingRight: '10px !important', fontWeight : '700' }}>Married</label>
                                     <label className="switch" style={{ display: 'inline-block', 'verticalAlign': '-14px' }}>
-                                        <input type="checkbox" defaultChecked="false" className="togBtn" id="is_married" ref="is_married" onChange={this.handleInputChange} />
+                                        <input type="checkbox" checked={this.state.mainState.is_married} className="togBtn" id="is_married" ref="is_married" onChange={this.handleInputChange} />
                                         <div className="slider round" ></div>
                                     </label>
                                 </div>
@@ -266,7 +310,7 @@ class UserInfo extends Component {
                     <br />
                     <div className="form-group">
                         <label >Address:</label>
-                        <textarea className="form-control" rows="5" id="address" ref="address" onChange={this.handleInputChange}></textarea>
+                        <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange}></textarea>
                     </div>
                     <br />
                     <div className="form-group">

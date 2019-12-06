@@ -7,6 +7,6 @@ import UserInfo from './components/UserInfo';
 export default () => (
     <Layout>
         <Route exact path={'/'} component={MainPage} />
-        <Route exact path={'/UserInfo'} component={UserInfo} />
+        <Route exact path={'/UserInfo/:id?'} component={UserInfo} />
   </Layout>
 );

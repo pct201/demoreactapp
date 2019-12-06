@@ -22,7 +22,7 @@ namespace ICSB.Business.Models
        
         public string Last_name { get; set; }
 
-        public string Mobile_Number { get; set; }
+        public string Mobile_number { get; set; }
 
         public int Education_Id { get; set; }
 
@@ -38,9 +38,9 @@ namespace ICSB.Business.Models
 
         public string Blog { get; set; }
 
-        public Byte[] Profile_Picture { get; set; }
+        public string Profile_Picture { get; set; }
 
-        public Byte[] Document { get; set; }
+        public string Document { get; set; }
 
         public string Document_Name { get; set; }
          
