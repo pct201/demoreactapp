@@ -4,22 +4,29 @@ import DatePicker from "react-16-bootstrap-date-picker";
 import Summernote from './Summernote';
 import UploadImage from './UploadImage';
 import { connect } from 'react-redux';
+import validator from 'validator';
 
 class UserInfo extends Component {
     state = {
         mainState: {
-            first_name: null,
-            last_name: null,
-            email: null,
-            mobile_number: null,
-            education_id: null,
-            salary: null,
+            first_name: "",
+            last_name: "",
+            email: "",
+            mobile_number: "",
+            education_id: "",
+            salary: "",
             is_married: false,
-            address: null,
-            document: null,
-            blog: null,
-            profile_picture: null,
+            address: "",
+            document: "",
+            blog: "",
+            profile_picture: "",
             birth_date: new Date().toISOString()
+        },
+        error: {
+            first_name: false,
+            last_name: false,
+            email: false,
+            mobile_number: false
         },
         otherState: {
             fileName: "No file selected",
@@ -110,8 +117,43 @@ class UserInfo extends Component {
             });
         }
     }
+    handleValidation = () => {
+        const { mainState } = this.state;
+        //create new errors object
+        let newErrorsObj = Object.entries(mainState)
+            .filter(([key, value]) => {
+                debugger
+                if (this.refs[key] != undefined && this.refs[key].classList != undefined && this.refs[key].classList.contains("required")) {
+                    if (this.refs[key].hasAttribute("additional_validation")) {
+                        if (this.refs[key].attributes.additional_validation.value == "email") {
+                            return !validator.isEmail(value);
+                        }
+                        else if (this.refs[key].attributes.additional_validation.value == "mobile_number") {
+                            return !validator.isMobilePhone(value, 'en-IN');
+                        }
+                    }
+                    else {
+                        return validator.isEmpty(value);
+                    }
+                }
+            })
+            .reduce((obj, [key, value]) => {
+                obj[key] = true;
+                return obj;
+            }, {});
 
-    getAllState = () => {
+        if (Object.keys(newErrorsObj).length > 0) {
+            this.setState({
+                error: newErrorsObj
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+    handleOnSubmit = event => {
+        event.preventDefault();
+
         this.setState({
             mainState: {
                 ...this.state.mainState,
@@ -119,9 +161,14 @@ class UserInfo extends Component {
                 profile_picture: this.props.cropperdata
             }
         });
-    }
+
+        if (this.handleValidation()) {
+            alert("success")
+        }
+    };
 
     render() {
+        const { error } = this.state;
         let deleteStyle = {
             display: this.state.otherState.isDeleteShow ? "block" : "none"
         }
@@ -137,7 +184,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">First Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="first_name" ref="first_name" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -145,7 +192,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Last Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="last_name" ref="last_name" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -156,7 +203,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Email :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="email" ref="email" onChange={this.handleInputChange} />
+                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -164,7 +211,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Mobile No. :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className="form-control" id="mobile_number" ref="mobile_number" onChange={this.handleInputChange} />
+                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" onChange={this.handleInputChange} />
                                 </div>
                             </div>
                         </div>
@@ -250,7 +297,7 @@ class UserInfo extends Component {
                     </div>
                     <br />
                     <div>
-                        <input type="button" className="btn btn-primary" value="Submit" style={{ "marginRight": "1%" }} onClick={this.getAllState} />
+                        <input type="button" className="btn btn-primary" value="Submit" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
                         <input type="button" className="btn btn-secondary" value="Cancel" />
                     </div>
                     <br />

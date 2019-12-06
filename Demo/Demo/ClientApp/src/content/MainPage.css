@@ -125,6 +125,9 @@
 
 .cus-img-preview{ background-color:#FFF; border:1px solid #ddd; height:300px; width:100% !important; overflow:hidden;}
 .cus-cropbase h4{ position:relative; font-size:18px; background-color:#ddd; padding:10px 15px; font-weight:bold; margin:0px; overflow:hidden;}
+.input-validation-error {
+    border: 1px solid #ed5469 !important;
+}
 .cus-cropbase h4 .btn{ position:absolute; top:3px; right:3px;}
 
 .ci-box { border: 1px solid #d5d6d8; position: relative; height: 170px; padding: 20px; margin-bottom: 13px; }
