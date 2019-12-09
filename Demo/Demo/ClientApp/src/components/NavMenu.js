@@ -18,12 +18,12 @@ export default props => (
           <NavItem>
             <Glyphicon glyph='home' /> Dashboard
           </NavItem>
-                </LinkContainer>
-                <LinkContainer to={'/userinfo'} exact>
-                    <NavItem>
-                        <Glyphicon glyph='user' /> Add New User
+        </LinkContainer>
+        <LinkContainer to={'/userinfo'} exact>
+          <NavItem>
+            <Glyphicon glyph='user' /> Add New User
           </NavItem>
-                </LinkContainer>
+        </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>

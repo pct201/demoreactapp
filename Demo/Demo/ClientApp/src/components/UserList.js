@@ -43,7 +43,7 @@ export default class UserList extends Component {
                 { data: "first_name", title: "First Name" },
                 { data: "last_name", title: "Last Name" },
                 { data: "email", title: "Email Address" },
-                { data: "mobile_Number", title: "Contact Number" },
+                { data: "mobile_number", title: "Contact Number" },
                 { data: "education_Name", title: "Education" },
                 { data: "salary", title: "Salary" },
                 { data: "birth_Date", title: "Birth Date" },

@@ -9,7 +9,7 @@ import validator from 'validator';
 class UserInfo extends Component {
     state = {
         mainState: {
-            userId:0,
+            userId: 0,
             first_name: "",
             last_name: "",
             email: "",
@@ -36,8 +36,20 @@ class UserInfo extends Component {
         }
     }
 
+    componentDidUpdate(nextProps) {
+        if (nextProps.summernotedata !== this.props.summernotedata || nextProps.cropperdata !== this.props.cropperdata) {
+            this.setState({
+                mainState: {
+                    ...this.state.mainState,
+                    blog: this.props.summernotedata,
+                    profile_picture: this.props.cropperdata
+                }
+            });
+        }
+    }
+
     componentDidMount = () => {
-       
+
         axios.get("http://192.168.2.44/Api/Employee/GetEducationList")
             .then(result => {
                 this.setState({
@@ -47,13 +59,14 @@ class UserInfo extends Component {
                     }
                 })
             })
+
         let userId = this.props.match.params.id;
         if (userId > 0) {
             axios.get("http://192.168.2.44/Api/Employee/GetEmployeeDetailsById/" + userId)
-                .then(result => {                   
+                .then(result => {
                     this.setState({
                         mainState: {
-                            userId:result.data.userId,
+                            userId: result.data.userId,
                             first_name: result.data.first_name,
                             last_name: result.data.last_name,
                             email: result.data.email,
@@ -68,15 +81,6 @@ class UserInfo extends Component {
                             birth_date: result.data.birth_Date
                         }
                     })
-                    //this.
-                    //this.refs.first_name.value = result.data.first_name;
-                    //this.refs.last_name.value = result.data.last_name;
-                    //this.refs.email.value = result.data.email;
-                    //this.refs.mobile_number.value = result.data.mobile_number;
-                    //this.refs.salary.value = result.data.salary;
-                    //this.refs.address.value = result.data.address
-                    //this.refs.birth_date.value=(result.data.birth_Date);
-                    //this.refs.is_married.checked = result.data.is_married;
                 })
         }
     }
@@ -105,7 +109,7 @@ class UserInfo extends Component {
         });
     }
 
-    handleDatepickerChange = (value, formattedValue) => {      
+    handleDatepickerChange = (value, formattedValue) => {
         this.setState({
             mainState: {
                 ...this.state.mainState,
@@ -156,13 +160,12 @@ class UserInfo extends Component {
         //create new errors object
         let newErrorsObj = Object.entries(mainState)
             .filter(([key, value]) => {
-                debugger
-                if (this.refs[key] != undefined && this.refs[key].classList != undefined && this.refs[key].classList.contains("required")) {
+                if (this.refs[key] !== undefined && this.refs[key].classList !== undefined && this.refs[key].classList.contains("required")) {
                     if (this.refs[key].hasAttribute("additional_validation")) {
-                        if (this.refs[key].attributes.additional_validation.value == "email") {
+                        if (this.refs[key].attributes.additional_validation.value === "email") {
                             return !validator.isEmail(value);
                         }
-                        else if (this.refs[key].attributes.additional_validation.value == "mobile_number") {
+                        else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
                             return !validator.isMobilePhone(value, 'en-IN');
                         }
                     }
@@ -185,27 +188,16 @@ class UserInfo extends Component {
             return true;
         }
     }
+
     handleOnSubmit = event => {
-        event.preventDefault();
-
-        this.setState({
-            mainState: {
-                ...this.state.mainState,
-                blog: this.props.summernotedata,
-                profile_picture: this.props.cropperdata
-            }
-        });
-
         if (this.handleValidation()) {
-            alert("success")            
-
-        //axios.post('https://localhost:44374/api/Employee/InsertEmployeeDetails', this.state.mainState, {
-        //    'Content-Type': 'application/json'
-        //})
-        //    .then(
-        //        this.props.history.push('/', null)
-        //    )
-
+            alert("success")
+            axios.post('https://localhost:44374/api/Employee/InsertEmployeeDetails', this.state.mainState, {
+                'Content-Type': 'application/json'
+            })
+                .then(
+                    this.props.history.push('/', null)
+                )
         }
     };
 
@@ -214,8 +206,6 @@ class UserInfo extends Component {
         let deleteStyle = {
             display: this.state.otherState.isDeleteShow ? "block" : "none"
         }
-
-        console.log(this.state.mainState);
 
         return (
             <div className="user-info">
@@ -268,7 +258,7 @@ class UserInfo extends Component {
                                 <div className="col-md-9">
                                     <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} onChange={this.handleInputChange}>
                                         <option>Select</option>
-                                        {this.state.otherState.educationData != null ? this.state.otherState.educationData.map(key => (                                            
+                                        {this.state.otherState.educationData !== null ? this.state.otherState.educationData.map(key => (
                                             <option value={key.education_Id} key={key.education_Id}>{key.education_Name}</option>
                                         )) : null}
                                     </select>
@@ -298,7 +288,7 @@ class UserInfo extends Component {
                         <div className="col-md-6">
                             <div className="mvc-checkbox" style={{ 'paddingTop': '4px' }}>
                                 <div className="toggle-switch ipe-switch">
-                                    <label className="default-label" style={{ paddingRight: '10px !important', fontWeight : '700' }}>Married</label>
+                                    <label className="default-label" style={{ paddingRight: '10px !important', fontWeight: '700' }}>Married</label>
                                     <label className="switch" style={{ display: 'inline-block', 'verticalAlign': '-14px' }}>
                                         <input type="checkbox" checked={this.state.mainState.is_married} className="togBtn" id="is_married" ref="is_married" onChange={this.handleInputChange} />
                                         <div className="slider round" ></div>
