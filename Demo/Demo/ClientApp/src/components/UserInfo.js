@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import { actionCreatorsSummernote } from '../store/Summernote';
 import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
-
+const $ = require('jquery');
 class UserInfo extends Component {
     state = {
         mainState: {
@@ -24,7 +24,7 @@ class UserInfo extends Component {
             address: "",
             document: "",
             document_name: "",
-            blog: "",            
+            blog: "",
             profile_picture: "",
             birth_date: new Date().toISOString()
         },
@@ -82,17 +82,23 @@ class UserInfo extends Component {
                             is_married: result.data.is_Married,
                             address: result.data.address,
                             document: result.data.document,
-                            document_name:result.data.document_name,
+                            document_name: result.data.document_Name,
                             blog: result.data.blog,
                             profile_picture: result.data.profile_picture,
                             birth_date: result.data.birth_Date
+                        },
+                        otherState: {
+                            fileName: (result.data.document_Name == null || result.data.document_Name == '') ? "No file selected" : result.data.document_Name,
+                            isDeleteShow: (result.data.document_Name == null || result.data.document_Name == '') ? false : true,
+                            educationData: null
                         }
                     })
-                    this.props.SummernoteChange(result.data.blog);
-                    this.props.uploadCroppedImage(result.data.profile_picture);
+
+                    //this.props.SummernoteChange(result.data.blog);
+                    //this.props.uploadCroppedImage(result.data.profile_picture);
                 })
         }
-       
+
     }
 
     uploadFile = (event) => {
@@ -110,7 +116,7 @@ class UserInfo extends Component {
             mainState: {
                 ...this.state.mainState,
                 document: null,
-                document_name:null
+                document_name: null
             },
             otherState: {
                 ...this.state.otherState,
@@ -202,7 +208,7 @@ class UserInfo extends Component {
     }
 
     handleOnSubmit = event => {
-        if (this.handleValidation()) {            
+        if (this.handleValidation()) {
             axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
                 'Content-Type': 'application/json'
             })
@@ -315,6 +321,7 @@ class UserInfo extends Component {
                     </div>
                     <br />
                     <div className="form-group">
+                        <label >Blog:</label>
                         <Summernote />
                     </div>
                     <br />
@@ -333,6 +340,7 @@ class UserInfo extends Component {
                             </div>
                         </div>
                     </div>
+
                     <br />
                     <div className="termsAndCond">
                         <label>

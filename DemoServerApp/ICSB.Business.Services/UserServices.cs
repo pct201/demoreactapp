@@ -66,13 +66,14 @@ namespace ICSB.Business.Services
             if (objUserModel.UserId > 0)
                 parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
 
-            var objPicture = objUserModel.Profile_Picture.Split(',');
-            objUserModel.Profile_Picture_Type = objPicture[0];
-            objUserModel.Profile_Picture = objPicture[1];
+            if (!string.IsNullOrEmpty(objUserModel.Profile_Picture))            
+                parameters.Add(new DBParameters() { Name = "@profile_picture", Value = Convert.FromBase64String(objUserModel.Profile_Picture.Split(',')[1]), DBType = DbType.Binary });
 
-            var objdocument = objUserModel.Document.Split(',');
-            objUserModel.Document_Type = objdocument[0];
-            objUserModel.Document = objdocument[1];
+            if (!string.IsNullOrEmpty(objUserModel.Document))
+            {        
+                parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
+                parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(objUserModel.Document.Split(',')[1]), DBType = DbType.Binary });
+            }
 
             parameters.Add(new DBParameters() { Name = "@email", Value = objUserModel.Email, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@first_name", Value = objUserModel.First_name, DBType = DbType.AnsiString });
@@ -84,11 +85,6 @@ namespace ICSB.Business.Services
             parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
             parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@profile_picture_type", Value = objUserModel.Profile_Picture_Type, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = Convert.FromBase64String(objUserModel.Profile_Picture), DBType = DbType.Binary });
-            parameters.Add(new DBParameters() { Name = "@document_type", Value = objUserModel.Document_Type, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(objUserModel.Document), DBType = DbType.Binary });
             parameters.Add(new DBParameters() { Name = "@created_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
             return Convert.ToInt32(this.ExecuteProcedure("dbo.add_edit_user", ExecuteType.ExecuteScalar, parameters));
         }
