@@ -29,26 +29,29 @@ namespace ICSB.Business.Services
         /// <param name="sortDirection"></param>
         /// <param name="userId"></param>     
         /// <returns></returns>
-        public virtual List<UserModel> GetUserList(int? pageNo, string sortExpression, string sortDirection,int userId=0)
+        public virtual List<UserModel> GetUserList(int? pageNo, string sortExpression, string sortDirection, int userId = 0)
         {
-
             Collection<DBParameters> parameters = new Collection<DBParameters>();
-
-            if(userId>0)
+            if (userId > 0)
+            {
                 parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });
-
-            if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
-            {
-                parameters.Add(new DBParameters() { Name = "start_row_index", Value = this.StartRowIndex(pageNo), DBType = DbType.Int16 });
-                parameters.Add(new DBParameters() { Name = "end_row_index", Value = this.EndRowIndex(pageNo), DBType = DbType.Int16 });
+                return this.ExecuteProcedure<UserModel>("[dbo].[user_detail_get]", parameters).ToList();
             }
-
-            if (!string.IsNullOrEmpty(sortExpression) && !string.IsNullOrEmpty(sortDirection))
+            else
             {
-                parameters.Add(new DBParameters() { Name = "sort_expression", Value = sortExpression, DBType = DbType.String });
-                parameters.Add(new DBParameters() { Name = "sort_direction", Value = sortDirection, DBType = DbType.String });
+                if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
+                {
+                    parameters.Add(new DBParameters() { Name = "start_row_index", Value = this.StartRowIndex(pageNo), DBType = DbType.Int16 });
+                    parameters.Add(new DBParameters() { Name = "end_row_index", Value = this.EndRowIndex(pageNo), DBType = DbType.Int16 });
+                }
+
+                if (!string.IsNullOrEmpty(sortExpression) && !string.IsNullOrEmpty(sortDirection))
+                {
+                    parameters.Add(new DBParameters() { Name = "sort_expression", Value = sortExpression, DBType = DbType.String });
+                    parameters.Add(new DBParameters() { Name = "sort_direction", Value = sortDirection, DBType = DbType.String });
+                }
+                return this.ExecuteProcedure<UserModel>("[dbo].[user_list_get]", parameters).ToList();
             }
-            return this.ExecuteProcedure<UserModel>("[dbo].[user_list_get]", parameters).ToList();
         }
 
         /// <summary>
@@ -63,6 +66,14 @@ namespace ICSB.Business.Services
             if (objUserModel.UserId > 0)
                 parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
 
+            var objPicture = objUserModel.Profile_Picture.Split(',');
+            objUserModel.Profile_Picture_Type = objPicture[0];
+            objUserModel.Profile_Picture = objPicture[1];
+
+            var objdocument = objUserModel.Document.Split(',');
+            objUserModel.Document_Type = objdocument[0];
+            objUserModel.Document = objdocument[1];
+
             parameters.Add(new DBParameters() { Name = "@email", Value = objUserModel.Email, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@first_name", Value = objUserModel.First_name, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@last_name", Value = objUserModel.Last_name, DBType = DbType.AnsiString });
@@ -73,13 +84,15 @@ namespace ICSB.Business.Services
             parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
             parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = Convert.FromBase64String(objUserModel.Profile_Picture.Replace("data:text/html;base64,", "")), DBType = DbType.Binary });
+            parameters.Add(new DBParameters() { Name = "@profile_picture_type", Value = objUserModel.Profile_Picture_Type, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@profile_picture", Value = Convert.FromBase64String(objUserModel.Profile_Picture), DBType = DbType.Binary });
+            parameters.Add(new DBParameters() { Name = "@document_type", Value = objUserModel.Document_Type, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(objUserModel.Document.Replace("data:text/html;base64,", "")), DBType = DbType.Binary });
+            parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(objUserModel.Document), DBType = DbType.Binary });
             parameters.Add(new DBParameters() { Name = "@created_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
             return Convert.ToInt32(this.ExecuteProcedure("dbo.add_edit_user", ExecuteType.ExecuteScalar, parameters));
         }
-        
+
 
         /// <summary>
         /// Fetch user list from database

@@ -19,7 +19,8 @@ class UserInfo extends Component {
             is_married: false,
             address: "",
             document: "",
-            blog: "",
+            document_name: "",
+            blog: "",            
             profile_picture: "",
             birth_date: new Date().toISOString()
         },
@@ -64,6 +65,7 @@ class UserInfo extends Component {
         if (userId > 0) {
             axios.get("http://192.168.2.44/Api/Employee/GetEmployeeDetailsById/" + userId)
                 .then(result => {
+                    console.log(result.data);
                     this.setState({
                         mainState: {
                             userId: result.data.userId,
@@ -76,6 +78,7 @@ class UserInfo extends Component {
                             is_married: result.data.is_Married,
                             address: result.data.address,
                             document: result.data.document,
+                            document_name:result.data.document_name,
                             blog: result.data.blog,
                             profile_picture: result.data.profile_picture,
                             birth_date: result.data.birth_Date
@@ -83,6 +86,7 @@ class UserInfo extends Component {
                     })
                 })
         }
+       
     }
 
     uploadFile = (event) => {
@@ -99,7 +103,8 @@ class UserInfo extends Component {
         this.setState({
             mainState: {
                 ...this.state.mainState,
-                document: null
+                document: null,
+                document_name:null
             },
             otherState: {
                 ...this.state.otherState,
@@ -127,7 +132,8 @@ class UserInfo extends Component {
                 this.setState({
                     mainState: {
                         ...this.state.mainState,
-                        [savedTarget.id]: reader.result
+                        [savedTarget.id]: reader.result,
+                        document_name: savedTarget.files[0].name
                     },
                     otherState: {
                         ...this.state.otherState,
@@ -190,9 +196,8 @@ class UserInfo extends Component {
     }
 
     handleOnSubmit = event => {
-        if (this.handleValidation()) {
-            alert("success")
-            axios.post('https://localhost:44374/api/Employee/InsertEmployeeDetails', this.state.mainState, {
+        if (this.handleValidation()) {            
+            axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
                 'Content-Type': 'application/json'
             })
                 .then(

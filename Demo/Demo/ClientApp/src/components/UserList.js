@@ -129,7 +129,7 @@ export default class UserList extends Component {
             if (this.cellIndex != 0) {
                 var userId = $(this).parent().attr("id");
                 if (userId != undefined && userId != null) {
-                    this.props.history.push('/userinfo', userId)
+                    window.location.href = '/userinfo/'+ userId;
                 }
             }
         });

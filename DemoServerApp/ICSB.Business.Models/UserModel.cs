@@ -38,9 +38,13 @@ namespace ICSB.Business.Models
 
         public string Blog { get; set; }
 
+        public string Profile_Picture_Type { get; set; }
+
         public string Profile_Picture { get; set; }
 
         public string Document { get; set; }
+
+        public string Document_Type { get; set; }
 
         public string Document_Name { get; set; }
          
