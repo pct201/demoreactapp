@@ -9,8 +9,16 @@ import { bindActionCreators } from 'redux';
 import { actionCreatorsSummernote } from '../store/Summernote';
 import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
+import WarningPopup from './WarningPopup';
 const $ = require('jquery');
 class UserInfo extends Component {
+
+
+    constructor(props) {    
+        super(props);
+        this.handleModelHide = this.handleModelHide.bind(this);
+    }
+
     state = {
         mainState: {
             userId: 0,
@@ -32,13 +40,19 @@ class UserInfo extends Component {
             first_name: false,
             last_name: false,
             email: false,
-            mobile_number: false
+            mobile_number: false,
         },
         otherState: {
             fileName: "No file selected",
             isDeleteShow: false,
             educationData: null
+        },
+        popupState: {
+            redirectredirect:false,
+            message: "",
+            isshow: false
         }
+
     }
 
     componentDidUpdate(nextProps) {
@@ -161,7 +175,7 @@ class UserInfo extends Component {
                     [event.target.id]: event.target.checked
                 }
             });
-        }
+        }     
         else {
             this.setState({
                 mainState: {
@@ -173,9 +187,10 @@ class UserInfo extends Component {
     }
     handleValidation = () => {
         const { mainState } = this.state;
+      
         //create new errors object
         let newErrorsObj = Object.entries(mainState)
-            .filter(([key, value]) => {
+            .filter(([key, value]) => {               
                 if (this.refs[key] !== undefined && this.refs[key].classList !== undefined && this.refs[key].classList.contains("required")) {
                     if (this.refs[key].hasAttribute("additional_validation")) {
                         if (this.refs[key].attributes.additional_validation.value === "email") {
@@ -206,15 +221,44 @@ class UserInfo extends Component {
     }
 
     handleOnSubmit = event => {
-        if (this.handleValidation()) {
-            axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
-                'Content-Type': 'application/json'
+        if (this.state.mainState.userId <= 0 && !this.refs.terms.checked) {
+            this.setState({
+                popupState: {
+                    ...this.state.popupState, message: "Please accept term and condition.",
+                    isshow: true,
+                    redirect: false
+                }
             })
-                .then(
-                    this.props.history.push('/', null)
-                )
+        }
+        else{
+            if (this.handleValidation()) {
+                axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
+                    'Content-Type': 'application/json'
+                })
+                    .then(
+                        this.setState({
+                            popupState: {
+                                ...this.state.popupState, message: "User information saved successfully.",
+                                isshow: true,
+                                redirect:true
+                            }
+                        })
+                    )
+            }
         }
     };
+
+    handleModelHide(e) {        
+        this.setState({
+            popupState: {
+                ...this.state.popupState, message: null,
+                isshow: false
+            }
+        })
+        if (this.state.popupState.redirect) {
+            this.props.history.push('/', null);
+        }
+    }
 
     render() {
         const { error } = this.state;
@@ -340,17 +384,21 @@ class UserInfo extends Component {
                     </div>
 
                     <br />
-                    <div className="termsAndCond">
-                        <label>
-                            <input type="checkbox" className="form-check-input" value="" />
+                    {((this.state.mainState.userId) <= 0) ?
+                    <div className="termsAndCond">                       
+                            <label>
+                                <input type="checkbox" name="termsAndCond" id="terms" ref="terms" className="form-check-input"/>
                             <p>I Accept terms and conditions</p>
-                        </label>
+                            </label>                            
                     </div>
-                    <br />
+                        : ""
+                    }
+                    
                     <div>
                         <input type="button" className="btn btn-primary" value="Submit" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
                         <input type="button" className="btn btn-secondary" value="Cancel" />
                     </div>
+                    <WarningPopup show={this.state.popupState.isshow} message={this.state.popupState.message} popupClose={this.handleModelHide} />
                     <br />
                 </div>
             </div>
