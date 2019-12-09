@@ -2,7 +2,7 @@
 import ReactSummernote from 'react-summernote';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actionCreators } from '../store/Summernote';
+import { actionCreatorsSummernote } from '../store/Summernote';
 import PreviewPop from './PreviewPopup';
 import "../content/fontawesome/css/font-awesome.min.css";
 import 'react-summernote/dist/react-summernote.css';
@@ -65,5 +65,5 @@ function mapStatetoProps(state) {
 
 export default connect(
     mapStatetoProps,
-    dispatch => bindActionCreators(actionCreators, dispatch)
+    dispatch => bindActionCreators(actionCreatorsSummernote, dispatch)
 )(Summernote)

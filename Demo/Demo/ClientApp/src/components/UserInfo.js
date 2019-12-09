@@ -5,6 +5,10 @@ import Summernote from './Summernote';
 import UploadImage from './UploadImage';
 import { connect } from 'react-redux';
 import validator from 'validator';
+import { bindActionCreators } from 'redux';
+import { actionCreatorsSummernote } from '../store/Summernote';
+import { actionCreators } from '../store/UploadImage';
+import "../content/fontawesome/css/font-awesome.min.css";
 
 class UserInfo extends Component {
     state = {
@@ -84,6 +88,8 @@ class UserInfo extends Component {
                             birth_date: result.data.birth_Date
                         }
                     })
+                    this.props.SummernoteChange(result.data.blog);
+                    this.props.uploadCroppedImage(result.data.profile_picture);
                 })
         }
        
@@ -285,7 +291,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Birth Date :</label>
                                 <div className="col-md-9">
-                                    <DatePicker id="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} />
+                                    <DatePicker id="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} className="fa fa-calendar" />
                                 </div>
                             </div>
                         </div>
@@ -353,4 +359,16 @@ function mapStatetoProps(state) {
     }
 }
 
-export default connect(mapStatetoProps, null)(UserInfo)
+function actionCreator(data) {
+    return dispatch => {
+        dispatch(actionCreatorsSummernote(data))
+        dispatch(actionCreators(data))
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    action1: SummernoteChange => dispatch(actionCreatorsSummernote(SummernoteChange)),
+    action2: uploadCroppedImage => dispatch(actionCreators(uploadCroppedImage))
+})
+
+export default connect(mapStatetoProps, mapDispatchToProps)(UserInfo)

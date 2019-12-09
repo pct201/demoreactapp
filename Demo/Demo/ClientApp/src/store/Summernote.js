@@ -8,7 +8,7 @@ const initialState = {
     isShow: false
 };
 
-export const actionCreators = {
+export const actionCreatorsSummernote = {
     SummernoteChange: (content) => ({ type: handleSummernoteChange, content }),
     PreviewClick: () => ({ type: handlePreviewClick }),
     handleModelHide: () => ({ type: handleModelHide })
