@@ -69,7 +69,6 @@ class UserInfo extends Component {
         if (userId > 0) {
             axios.get("http://192.168.2.44/Api/Employee/GetEmployeeDetailsById/" + userId)
                 .then(result => {
-                    console.log(result.data);
                     this.setState({
                         mainState: {
                             userId: result.data.userId,
@@ -84,7 +83,7 @@ class UserInfo extends Component {
                             document: result.data.document,
                             document_name: result.data.document_Name,
                             blog: result.data.blog,
-                            profile_picture: result.data.profile_picture,
+                            profile_picture: result.data.profile_Picture,
                             birth_date: result.data.birth_Date
                         },
                         otherState: {
@@ -93,9 +92,8 @@ class UserInfo extends Component {
                             educationData: null
                         }
                     })
-
-                    //this.props.SummernoteChange(result.data.blog);
-                    //this.props.uploadCroppedImage(result.data.profile_picture);
+                    this.props.SummernoteChange(result.data.blog);
+                    this.props.uploadCroppedImage("data:image;base64," + result.data.profile_Picture);
                 })
         }
 
@@ -367,16 +365,4 @@ function mapStatetoProps(state) {
     }
 }
 
-function actionCreator(data) {
-    return dispatch => {
-        dispatch(actionCreatorsSummernote(data))
-        dispatch(actionCreators(data))
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    action1: SummernoteChange => dispatch(actionCreatorsSummernote(SummernoteChange)),
-    action2: uploadCroppedImage => dispatch(actionCreators(uploadCroppedImage))
-})
-
-export default connect(mapStatetoProps, mapDispatchToProps)(UserInfo)
+export default connect(mapStatetoProps, dispatch => bindActionCreators(Object.assign({}, actionCreatorsSummernote, actionCreators), dispatch))(UserInfo)
