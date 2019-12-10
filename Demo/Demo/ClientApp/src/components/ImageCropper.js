@@ -44,6 +44,11 @@ export default class ImageCropper extends Component {
         this.props.onUploadImage(cropResult);
     }
 
+    _crop() {
+        this.refs.dataWidth.value = this.cropper.getCroppedCanvas().width;
+        this.refs.dataHeight.value = this.cropper.getCroppedCanvas().height;
+    }
+
     croppedImage(result) {
         this.props.onUploadImage(result);
     }
@@ -87,6 +92,7 @@ export default class ImageCropper extends Component {
                     guides={true}
                     src={this.state.src}
                     ref={cropper => { this.cropper = cropper; }}
+                    crop={this._crop.bind(this)}
                 />
             )
         };
@@ -140,13 +146,13 @@ export default class ImageCropper extends Component {
                                 <div className="col-xs-6">
                                     <div className="field field--not-empty">
                                         <label className="field-label">Width(px)</label>
-                                        <input type="text" className="cus-control field-input" id="dataWidth" placeholder="width" disabled="disabled" />
+                                        <input type="text" className="cus-control field-input" ref="dataWidth" placeholder="width" disabled="disabled" />
                                     </div>
                                 </div>
                                 <div className="col-xs-6">
                                     <div className="field field--not-empty">
                                         <label className="field-label">Height(px)</label>
-                                        <input type="text" className="cus-control field-input" id="dataHeight" placeholder="height" disabled="disabled" />
+                                        <input type="text" className="cus-control field-input" ref="dataHeight" placeholder="height" disabled="disabled" />
                                     </div>
                                 </div>
                             </div>
