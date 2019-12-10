@@ -47,7 +47,8 @@ class UserInfo extends Component {
             isDeleteShow: false,
             educationData: null,
             validationMsg: "",
-            isValidationShow: 'none'
+            isValidationShow: 'none',
+            title:""
         },
         popupState: {
             redirectredirect: false,
@@ -105,12 +106,21 @@ class UserInfo extends Component {
                         otherState: {
                             ...this.state.otherState,
                             fileName: (result.data.document_Name === null || result.data.document_Name === '') ? "No file selected" : result.data.document_Name,
-                            isDeleteShow: (result.data.document_Name === null || result.data.document_Name === '') ? false : true
+                            isDeleteShow: (result.data.document_Name === null || result.data.document_Name === '') ? false : true,
+                            title: "User Information"
                         }
                     })
                     this.props.SummernoteChange(result.data.blog);
                     this.props.uploadCroppedImage("data:image;base64," + result.data.profile_Picture);
                 })
+        }
+        else {
+            this.setState({
+                otherState: {
+                    ...this.state.otherState,
+                    title:"Create New User"
+                }
+            })
         }
 
     }
@@ -316,7 +326,7 @@ class UserInfo extends Component {
         return (
             <div className="container-fluid user-info">
                 <div className="page-header">
-                    <h2><strong>User Information</strong></h2>
+                    <h2><strong>{this.state.otherState.title}</strong></h2>
                 </div>
                 <div className="alert alert-danger alert-dismissable  fade in" style={{ display: this.state.otherState.isValidationShow }}>
                     <a className="close" data-dismiss="alert" aria-label="close" onClick={this.handleCloseValidation}>×</a>
@@ -387,10 +397,10 @@ class UserInfo extends Component {
                             </div>
                         </div>
                     </div>
-                    
-                  
-                 
-                    
+
+
+
+
                     <br />
                     <div className="form-group">
                         <label >Blog:</label>
@@ -401,7 +411,7 @@ class UserInfo extends Component {
                         <div className="col-lg-6">
                             <div className="form-group">
                                 <label >Address:</label>
-                                <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange} style={{ height: '171px', resize: 'none'}}></textarea>
+                                <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange} style={{ height: '171px', resize: 'none' }}></textarea>
                             </div>
                         </div>
                         <div className="col-lg-6">
