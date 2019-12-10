@@ -204,7 +204,7 @@ class UserInfo extends Component {
                             return !validator.isEmail(value);
                         }
                         else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
-                            return !validator.isMobilePhone(value, 'en-IN');
+                            return !validator.isMobilePhone(value, 'en-CA');
                         }
                     }
                     else {
@@ -314,58 +314,44 @@ class UserInfo extends Component {
         }
 
         return (
-            <div className="user-info">
+            <div className="container-fluid user-info">
                 <div className="page-header">
-                    <center><h2>User Information</h2></center>
+                    <h2><strong>User Information</strong></h2>
                 </div>
                 <div className="alert alert-danger alert-dismissable  fade in" style={{ display: this.state.otherState.isValidationShow }}>
                     <a className="close" data-dismiss="alert" aria-label="close" onClick={this.handleCloseValidation}>×</a>
                     <div id="failMessageEdit">{ReactHtmlParser(this.state.otherState.validationMsg)} </div>
                 </div>
                 <div className="main-content">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">First Name :</label>
-                                <div className="col-md-9">
-                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" value={this.state.mainState.first_name} onChange={this.handleInputChange} error_msg="First Name"/>
+                    <div className="main-search-block">
+                        <div className="row">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">First Name :</label>
+                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" value={this.state.mainState.first_name} onChange={this.handleInputChange} error_msg="First Name" />
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Last Name :</label>
-                                <div className="col-md-9">
-                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" value={this.state.mainState.last_name} onChange={this.handleInputChange} error_msg="Last Name"/>
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Last Name :</label>
+                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" value={this.state.mainState.last_name} onChange={this.handleInputChange} error_msg="Last Name" />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Email :</label>
-                                <div className="col-md-9">
-                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" value={this.state.mainState.email} onChange={this.handleInputChange} error_msg="Email"/>
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Email :</label>
+                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" value={this.state.mainState.email} onChange={this.handleInputChange} error_msg="Email" />
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Mobile No. :</label>
-                                <div className="col-md-9">
-                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} error_msg="Mobile number"/>
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Mobile No. :</label>
+                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} error_msg="Mobile number" />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Education :</label>
-                                <div className="col-md-9">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Education :</label>
                                     <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} onChange={this.handleInputChange}>
                                         <option>Select</option>
                                         {this.state.otherState.educationData !== null ? this.state.otherState.educationData.map(key => (
@@ -374,51 +360,54 @@ class UserInfo extends Component {
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Salary :</label>
-                                <div className="col-md-9">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Salary :</label>
                                     <input type="text" className="form-control" id="salary" ref="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="form-group row">
-                                <label className="col-md-3 col-form-label">Birth Date :</label>
-                                <div className="col-md-9">
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <label className="col-form-label">Birth Date :</label>
                                     <DatePicker id="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} className="fa fa-calendar" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="col-md-6">
-                            <div className="mvc-checkbox" style={{ 'paddingTop': '4px' }}>
-                                <div className="toggle-switch ipe-switch">
-                                    <label className="default-label" style={{ paddingRight: '10px !important', fontWeight: '700' }}>Married</label>
-                                    <label className="switch" style={{ display: 'inline-block', 'verticalAlign': '-14px' }}>
-                                        <input type="checkbox" checked={this.state.mainState.is_married} className="togBtn" id="is_married" ref="is_married" onChange={this.handleInputChange} />
-                                        <div className="slider round" ></div>
-                                    </label>
+                            <div className="col-md-6 col-lg-4">
+                                <div className="form-group">
+                                    <div className="mvc-checkbox" style={{ 'paddingTop': '25px' }}>
+                                        <div className="toggle-switch ipe-switch">
+                                            <label className="default-label" style={{ paddingRight: '10px !important', fontWeight: '700' }}>Married</label>
+                                            <label className="switch" style={{ display: 'inline-block', 'verticalAlign': '-14px' }}>
+                                                <input type="checkbox" checked={this.state.mainState.is_married} className="togBtn" id="is_married" ref="is_married" onChange={this.handleInputChange} />
+                                                <div className="slider round" ></div>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <br />
-                    <div className="form-group">
-                        <label >Address:</label>
-                        <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange}></textarea>
-                    </div>
+                    
+                  
+                 
+                    
                     <br />
                     <div className="form-group">
                         <label >Blog:</label>
                         <Summernote />
                     </div>
                     <br />
-                    <UploadImage />
+                    <div className="row">
+                        <div className="col-lg-6">
+                            <div className="form-group">
+                                <label >Address:</label>
+                                <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange} style={{ height: '171px', resize: 'none'}}></textarea>
+                            </div>
+                        </div>
+                        <div className="col-lg-6">
+                            <UploadImage />
+                        </div>
+                    </div>
                     <br />
                     <div className="row">
                         <div className="col-xs-6 botpad25">
@@ -446,8 +435,8 @@ class UserInfo extends Component {
                     }
 
                     <div>
-                        <input type="button" className="btn btn-primary" value="Save" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
-                        <input type="button" className="btn btn-secondary" value="Cancel" onClick={() => this.handleCancel()} />
+                        <input type="button" className="cus-button primary" value="Save" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
+                        <input type="button" className="cus-button secondary" value="Cancel" onClick={() => this.handleCancel()} />
                     </div>
                     <WarningPopup show={this.state.popupState.isshow} message={this.state.popupState.message} popupClose={this.handleModelHide} />
                     <br />

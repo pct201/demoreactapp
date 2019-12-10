@@ -5,14 +5,14 @@ import '../content/MainPage.css';
 export default class MainPage extends Component {
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <div className="user-list">
                     <div className="page-header">
-                        <center><h2>Manage Users</h2></center>
+                        <h2><strong>Manage Users</strong></h2>
                     </div>
                     <UserList />
                 </div>
             </div>
-            )
+        )
     }
 }

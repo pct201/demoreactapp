@@ -8,7 +8,7 @@ const PreviewPopup = (props) => {
                 
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.popupClose}>Ok</Button>
+                <input type="button" className="cus-button primary" value="OK" onClick={props.popupClose}/>
             </Modal.Footer>
         </Modal>)
 }

@@ -5,10 +5,10 @@ const WarningPopup = (props) => {
     return (
         <Modal show={props.show} size="lg" aria-labelledby="contained-modal-title-vcenter" centered="true">
             <Modal.Body dangerouslySetInnerHTML={{ __html: props.message }}>
-                
+
             </Modal.Body>
-            <Modal.Footer>                
-                <Button onClick={props.popupClose}>OK</Button>
+            <Modal.Footer>
+                <input type="button" className="cus-button primary" value="OK" onClick={props.popupClose} />
             </Modal.Footer>
         </Modal>)
 }
