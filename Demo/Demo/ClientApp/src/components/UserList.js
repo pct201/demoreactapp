@@ -126,9 +126,9 @@ export default class UserList extends Component {
         });
         // on click event for edit clause
         $('#main tbody').on('click', 'td', function (i, e) {            
-            if (this.cellIndex != 0) {
+            if (this.cellIndex !== 0) {
                 var userId = $(this).parent().attr("id");
-                if (userId != undefined && userId != null) {
+                if (userId !== undefined && userId != null) {
                     window.location.href = '/userinfo/'+ userId;
                 }
             }

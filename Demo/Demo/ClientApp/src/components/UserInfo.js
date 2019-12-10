@@ -10,11 +10,11 @@ import { actionCreatorsSummernote } from '../store/Summernote';
 import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
+import ReactHtmlParser from "react-html-parser";
 const $ = require('jquery');
 class UserInfo extends Component {
 
-
-    constructor(props) {    
+    constructor(props) {
         super(props);
         this.handleModelHide = this.handleModelHide.bind(this);
     }
@@ -45,10 +45,12 @@ class UserInfo extends Component {
         otherState: {
             fileName: "No file selected",
             isDeleteShow: false,
-            educationData: null
+            educationData: null,
+            validationMsg: "",
+            isValidationShow: 'none'
         },
         popupState: {
-            redirectredirect:false,
+            redirectredirect: false,
             message: "",
             isshow: false
         }
@@ -102,8 +104,8 @@ class UserInfo extends Component {
                         },
                         otherState: {
                             ...this.state.otherState,
-                            fileName: (result.data.document_Name == null || result.data.document_Name == '') ? "No file selected" : result.data.document_Name,
-                            isDeleteShow: (result.data.document_Name == null || result.data.document_Name == '') ? false : true
+                            fileName: (result.data.document_Name === null || result.data.document_Name === '') ? "No file selected" : result.data.document_Name,
+                            isDeleteShow: (result.data.document_Name === null || result.data.document_Name === '') ? false : true
                         }
                     })
                     this.props.SummernoteChange(result.data.blog);
@@ -175,7 +177,7 @@ class UserInfo extends Component {
                     [event.target.id]: event.target.checked
                 }
             });
-        }     
+        }
         else {
             this.setState({
                 mainState: {
@@ -185,15 +187,17 @@ class UserInfo extends Component {
             });
         }
     }
+
     handleCancel = () => {
         this.props.history.push('/', null)
     }
+
     handleValidation = () => {
         const { mainState } = this.state;
-      
+        let validationMsg = "";
         //create new errors object
         let newErrorsObj = Object.entries(mainState)
-            .filter(([key, value]) => {               
+            .filter(([key, value]) => {
                 if (this.refs[key] !== undefined && this.refs[key].classList !== undefined && this.refs[key].classList.contains("required")) {
                     if (this.refs[key].hasAttribute("additional_validation")) {
                         if (this.refs[key].attributes.additional_validation.value === "email") {
@@ -209,6 +213,25 @@ class UserInfo extends Component {
                 }
             })
             .reduce((obj, [key, value]) => {
+                let msg = this.refs[key].getAttribute("error_msg");
+                if (this.refs[key].hasAttribute("additional_validation")) {
+                    if (this.refs[key].attributes.additional_validation.value === "email") {
+                        if (value !== "") {
+                            msg = "Enter valid email";
+                        }
+                    }
+                    else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
+                        if (value !== "") {
+                            msg = "Enter valid mobile number";
+                        }
+                    }
+                }
+                if (validationMsg.indexOf('Following') === -1) {
+                    validationMsg += '<span style="font-size:16px; font-weight:700;">Following items are required:</span>' + '<ul><li>' + msg + '</li>';
+                }
+                else {
+                    validationMsg += '<li>' + msg + '</li>';
+                }
                 obj[key] = true;
                 return obj;
             }, {});
@@ -217,10 +240,21 @@ class UserInfo extends Component {
             this.setState({
                 error: newErrorsObj
             });
+            this.showValidationMsg(validationMsg);
             return false;
         } else {
             return true;
         }
+    }
+
+    showValidationMsg = (validationMsg) => {
+        this.setState({
+            otherState: {
+                ...this.state.otherState,
+                validationMsg: validationMsg,
+                isValidationShow: 'block'
+            }
+        });
     }
 
     handleOnSubmit = event => {
@@ -233,7 +267,7 @@ class UserInfo extends Component {
                 }
             })
         }
-        else{
+        else {
             if (this.handleValidation()) {
                 axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
                     'Content-Type': 'application/json'
@@ -243,7 +277,7 @@ class UserInfo extends Component {
                             popupState: {
                                 ...this.state.popupState, message: "User information saved successfully.",
                                 isshow: true,
-                                redirect:true
+                                redirect: true
                             }
                         })
                     )
@@ -251,7 +285,7 @@ class UserInfo extends Component {
         }
     };
 
-    handleModelHide(e) {        
+    handleModelHide(e) {
         this.setState({
             popupState: {
                 ...this.state.popupState, message: null,
@@ -261,6 +295,16 @@ class UserInfo extends Component {
         if (this.state.popupState.redirect) {
             this.props.history.push('/', null);
         }
+    }
+
+    handleCloseValidation = () => {
+        this.setState({
+            otherState: {
+                ...this.state.otherState,
+                validationMsg: "",
+                isValidationShow: 'none'
+            }
+        });
     }
 
     render() {
@@ -274,13 +318,17 @@ class UserInfo extends Component {
                 <div className="page-header">
                     <center><h2>User Information</h2></center>
                 </div>
+                <div className="alert alert-danger alert-dismissable  fade in" style={{ display: this.state.otherState.isValidationShow }}>
+                    <a className="close" data-dismiss="alert" aria-label="close" onClick={this.handleCloseValidation}>×</a>
+                    <div id="failMessageEdit">{ReactHtmlParser(this.state.otherState.validationMsg)} </div>
+                </div>
                 <div className="main-content">
                     <div className="row">
                         <div className="col-md-6">
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">First Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" value={this.state.mainState.first_name} onChange={this.handleInputChange} />
+                                    <input type="text" className={error.first_name ? "input-validation-error form-control required" : "required form-control"} id="first_name" ref="first_name" value={this.state.mainState.first_name} onChange={this.handleInputChange} error_msg="First Name"/>
                                 </div>
                             </div>
                         </div>
@@ -288,7 +336,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Last Name :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" value={this.state.mainState.last_name} onChange={this.handleInputChange} />
+                                    <input type="text" className={error.last_name ? "input-validation-error form-control required" : "required form-control"} id="last_name" ref="last_name" value={this.state.mainState.last_name} onChange={this.handleInputChange} error_msg="Last Name"/>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +347,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Email :</label>
                                 <div className="col-md-9">
-                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" value={this.state.mainState.email} onChange={this.handleInputChange} />
+                                    <input type="text" className={error.email ? "input-validation-error form-control required" : "required form-control"} additional_validation="email" id="email" ref="email" value={this.state.mainState.email} onChange={this.handleInputChange} error_msg="Email"/>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +355,7 @@ class UserInfo extends Component {
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Mobile No. :</label>
                                 <div className="col-md-9">
-                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} />
+                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} error_msg="Mobile number"/>
                                 </div>
                             </div>
                         </div>
@@ -388,18 +436,18 @@ class UserInfo extends Component {
 
                     <br />
                     {((this.state.mainState.userId) <= 0) ?
-                    <div className="termsAndCond">                       
+                        <div className="termsAndCond">
                             <label>
-                                <input type="checkbox" name="termsAndCond" id="terms" ref="terms" className="form-check-input"/>
-                            <p>I Accept terms and conditions</p>
-                            </label>                            
-                    </div>
+                                <input type="checkbox" name="termsAndCond" id="terms" ref="terms" className="form-check-input" />
+                                <p>I Accept terms and conditions</p>
+                            </label>
+                        </div>
                         : ""
                     }
-                    
+
                     <div>
-                        <input type="button" className="btn btn-primary" value="Submit" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
-                        <input type="button" className="btn btn-secondary" value="Cancel" onClick={()=>this.handleCancel()} />
+                        <input type="button" className="btn btn-primary" value="Save" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
+                        <input type="button" className="btn btn-secondary" value="Cancel" onClick={() => this.handleCancel()} />
                     </div>
                     <WarningPopup show={this.state.popupState.isshow} message={this.state.popupState.message} popupClose={this.handleModelHide} />
                     <br />
