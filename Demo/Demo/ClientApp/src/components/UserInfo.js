@@ -87,9 +87,9 @@ class UserInfo extends Component {
                             birth_date: result.data.birth_Date
                         },
                         otherState: {
+                            ...this.state.otherState,
                             fileName: (result.data.document_Name == null || result.data.document_Name == '') ? "No file selected" : result.data.document_Name,
-                            isDeleteShow: (result.data.document_Name == null || result.data.document_Name == '') ? false : true,
-                            educationData: null
+                            isDeleteShow: (result.data.document_Name == null || result.data.document_Name == '') ? false : true
                         }
                     })
                     this.props.SummernoteChange(result.data.blog);
@@ -170,6 +170,9 @@ class UserInfo extends Component {
                 }
             });
         }
+    }
+    handleCancel = () => {
+        this.props.history.push('/', null)
     }
     handleValidation = () => {
         const { mainState } = this.state;
@@ -349,7 +352,7 @@ class UserInfo extends Component {
                     <br />
                     <div>
                         <input type="button" className="btn btn-primary" value="Submit" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
-                        <input type="button" className="btn btn-secondary" value="Cancel" />
+                        <input type="button" className="btn btn-secondary" value="Cancel" onClick={()=>this.handleCancel()} />
                     </div>
                     <br />
                 </div>
