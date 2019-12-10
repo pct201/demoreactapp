@@ -8,7 +8,7 @@ export default class MainPage extends Component {
             <div className="container">
                 <div className="user-list">
                     <div className="page-header">
-                        <center><h2>User List</h2></center>
+                        <center><h2>Manage Users</h2></center>
                     </div>
                     <UserList />
                 </div>

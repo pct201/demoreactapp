@@ -31,7 +31,9 @@ export default class ImageCropper extends Component {
         reader.onload = () => {
             this.setState({ src: reader.result, imageReady: true });
         };
-        reader.readAsDataURL(files[0]);
+        if (files != null) {
+            reader.readAsDataURL(files[0]);
+        }
     }
 
     cropImage() {

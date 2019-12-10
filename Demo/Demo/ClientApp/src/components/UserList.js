@@ -218,7 +218,7 @@ export default class UserList extends Component {
             <div>
                 <div className="button-holder">
                     <button className="cus-button primary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteConfirmation} >Delete</button>
-                    <button className="cus-button secondary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteConfirmation} >Add</button>
+                    <button className="cus-button secondary" style={{ "marginLeft": "15px", "float": "right" }} onClick={() => window.location.href='/userInfo'} >Add</button>
 
                 </div>
                 <div className="table-resposive">
