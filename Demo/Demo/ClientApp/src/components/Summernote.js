@@ -22,6 +22,17 @@ class Summernote extends Component {
         })
         return button.render();
     }
+
+    onImageUpload(images, insertImage) {    
+        for (let i = 0; i < images.length; i++) {          
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                insertImage(reader.result);
+            };
+            reader.readAsDataURL(images[i]);
+        }
+    };
+
     render() {
         return (
             <div>
@@ -49,6 +60,7 @@ class Summernote extends Component {
                         }
                     }}
                     onChange={this.props.SummernoteChange}
+                    onImageUpload={this.onImageUpload}
                 />
                 <PreviewPop show={this.props.isShow} summernoteContent={this.props.summernoteContent} popupClose={this.props.handleModelHide} />
             </div>

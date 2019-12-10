@@ -102,8 +102,8 @@ class UserInfo extends Component {
                         },
                         otherState: {
                             ...this.state.otherState,
-                            fileName: (result.data.document_Name == null || result.data.document_Name == '') ? "No file selected" : result.data.document_Name,
-                            isDeleteShow: (result.data.document_Name == null || result.data.document_Name == '') ? false : true
+                            fileName: (result.data.document_Name === null || result.data.document_Name === '') ? "No file selected" : result.data.document_Name,
+                            isDeleteShow: (result.data.document_Name === null || result.data.document_Name === '') ? false : true
                         }
                     })
                     this.props.SummernoteChange(result.data.blog);

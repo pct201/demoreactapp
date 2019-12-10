@@ -46,15 +46,29 @@ export default class UserList extends Component {
                 { data: "mobile_number", title: "Contact Number" },
                 { data: "education_Name", title: "Education" },
                 { data: "salary", title: "Salary" },
-                { data: "birth_Date", title: "Birth Date" },
+                {
+                    data: "birth_Date", title: "Birth Date", render: function (data, type, row) {                       
+                        var dt = new Date(data);
+                        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                        ];
+                        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());                                         
+                    }
+                },
                 {
                     data: "is_Married", title: "Married", render: function (data, type, row) {
-                        if (row.isMarried) return 'Yes';
+                      
+                        if (data) return 'Yes';
                         else return 'No';
                     }
                 },
                 { data: "address", title: "Address" },
-                { data: "updated_date", title: "Updated On" }
+                {
+                    data: "updated_date", title: "Updated On", render: function (data, type, row) {                       
+                        var dt = new Date(data);
+                        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                        ];
+                        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear() + " " + dt.getHours() + ":" + (dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes()) + ":" + (dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds()));
+                    }}
             ],
             autoWidth: false,
             processing: false,
@@ -78,7 +92,7 @@ export default class UserList extends Component {
             emptyTable: "No Record Found",
             lengthMenu: [10, 20, 30, 40, 50],
             columnDefs: [
-                { "targets": [0, 4, 6, 7, 10], "orderable": false }
+                { "targets": [0], "orderable": false }
             ],
             initComplete: function (setting, json) {
             },
@@ -126,9 +140,9 @@ export default class UserList extends Component {
         });
         // on click event for edit clause
         $('#main tbody').on('click', 'td', function (i, e) {            
-            if (this.cellIndex != 0) {
+            if (this.cellIndex !== 0) {
                 var userId = $(this).parent().attr("id");
-                if (userId != undefined && userId != null) {
+                if (userId !== undefined && userId !== null) {
                     window.location.href = '/userinfo/'+ userId;
                 }
             }
