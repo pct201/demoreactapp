@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Demo/.vs/Demo/config/applicationhost.config
+/Demo/.vs/Demo/DesignTimeBuild/.dtbcache
+/Demo/.vs/Demo/v16/Server/sqlite3/storage.ide-wal
+/Demo/.vs/Demo/v16/Server/sqlite3/storage.ide-shm
+/Demo/.vs/Demo/v16/Server/sqlite3/storage.ide
+/Demo/.vs/Demo/v16/Server/sqlite3/db.lock
+/Demo/.vs/Demo/v16/.suo
