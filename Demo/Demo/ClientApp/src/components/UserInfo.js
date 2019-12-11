@@ -11,7 +11,7 @@ import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
-const $ = require('jquery');
+
 class UserInfo extends Component {
 
     constructor(props) {

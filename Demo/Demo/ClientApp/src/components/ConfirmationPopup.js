@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 const ConfirmationPopup = (props) => {
     return (
@@ -8,8 +8,8 @@ const ConfirmationPopup = (props) => {
                 
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.actionFunction}>Yes</Button>
-                <Button onClick={props.popupClose}>No</Button>
+                <input type="button" className="cus-button primary" value="Yes" onClick={props.actionFunction} />
+                <input type="button" className="cus-button primary" style={{ marginLeft: "15px" }}  value="No" onClick={props.popupClose} />
             </Modal.Footer>
         </Modal>)
 }
