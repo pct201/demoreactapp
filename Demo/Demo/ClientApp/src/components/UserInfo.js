@@ -12,8 +12,9 @@ import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
 
+const API_URL = "http://192.168.2.44/Api/Employee/";
+
 class UserInfo extends Component {
-    const API_URL = "http://192.168.2.44/Api/Employee/";
     constructor(props) {
         super(props);
         this.handleModelHide = this.handleModelHide.bind(this);
