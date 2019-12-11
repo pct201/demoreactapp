@@ -72,7 +72,7 @@ namespace ICSB.Business.Services
             if (!string.IsNullOrEmpty(objUserModel.Document))
             {        
                 parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
-                parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(objUserModel.Document.Split(',')[1]), DBType = DbType.Binary });
+                parameters.Add(new DBParameters() { Name = "@document", Value = objUserModel.Document.Contains("base64")? Convert.FromBase64String(objUserModel.Document.Split(',')[1]): Convert.FromBase64String(objUserModel.Document), DBType = DbType.Binary });
             }
 
             parameters.Add(new DBParameters() { Name = "@email", Value = objUserModel.Email, DBType = DbType.String });
