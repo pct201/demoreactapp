@@ -18,7 +18,6 @@ export default class ImageCropper extends Component {
 
     onChange(e) {
         e.preventDefault();
-        this.refs.btnUploadCroppedImage.classList.remove("disabled");
         this.setState({ imageReady: false });
         let files;
         if (e.dataTransfer) {
@@ -36,7 +35,7 @@ export default class ImageCropper extends Component {
     }
 
     cropImage() {
-        if (typeof this.cropper === 'undefined') {
+        if (typeof this.cropper === 'undefined' || this.refs.btnUploadCroppedImage.classList.contains("disabled")) {
             return;
         }
         const cropResult = this.cropper.getCroppedCanvas().toDataURL();
@@ -44,8 +43,20 @@ export default class ImageCropper extends Component {
     }
 
     _crop() {
-        this.refs.dataWidth.value = this.cropper.getCroppedCanvas().width;
-        this.refs.dataHeight.value = this.cropper.getCroppedCanvas().height;
+        let width = this.cropper.getCroppedCanvas().width;
+        let height = this.cropper.getCroppedCanvas().height;
+        this.refs.dataWidth.value = width;
+        this.refs.dataHeight.value = height;
+        if (width <= 400 && height <= 138) {
+            this.refs.btnUploadCroppedImage.classList.remove("disabled");
+            this.refs.dataWidth.classList.remove("input-validation-error");
+            this.refs.dataHeight.classList.remove("input-validation-error");
+        }
+        else {
+            this.refs.btnUploadCroppedImage.classList.add("disabled");
+            this.refs.dataWidth.classList.add("input-validation-error");
+            this.refs.dataHeight.classList.add("input-validation-error");
+        }
     }
 
     croppedImage(result) {
