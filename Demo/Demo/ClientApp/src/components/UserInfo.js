@@ -284,7 +284,7 @@ class UserInfo extends Component {
         }
     };
     async insertData() {
-        const response = await axios.post('https://localhost:44374/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
+        const response = await axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
             'Content-Type': 'application/json'
         })
         const result = await response.data;
