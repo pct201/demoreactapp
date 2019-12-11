@@ -25,7 +25,7 @@ export default class UserList extends Component {
     }
 
     async bindUserTable() {
-        let res = await axios.get("http://192.168.2.44/Api/Employee/AllEmployeeDetails");
+        let res = await axios.get("https://localhost:44374/Api/Employee/AllEmployeeDetails");
         $(this.refs.main).DataTable({
             dom: '<"top"l>rt<"bottom"ip><"clear">',
             data: res.data,

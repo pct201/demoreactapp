@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 
 const PreviewPopup = (props) => {
     return (
-        <Modal show={props.show} size="lg" aria-labelledby="contained-modal-title-vcenter" centered="true">
+        <Modal className="bigPopup summernoteimg" show={props.show} aria-labelledby="contained-modal-title-vcenter" centered="true">
             <Modal.Body dangerouslySetInnerHTML={{ __html: props.summernoteContent }}>
                 
             </Modal.Body>

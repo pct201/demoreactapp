@@ -48,7 +48,7 @@ class UserInfo extends Component {
             educationData: null,
             validationMsg: "",
             isValidationShow: 'none',
-            title:""
+            title: ""
         },
         popupState: {
             redirectredirect: false,
@@ -118,7 +118,7 @@ class UserInfo extends Component {
             this.setState({
                 otherState: {
                     ...this.state.otherState,
-                    title:"Create New User"
+                    title: "Create New User"
                 }
             })
         }
@@ -232,12 +232,12 @@ class UserInfo extends Component {
                     }
                     else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
                         if (value !== "") {
-                            msg = "Enter valid mobile number";
+                            msg = "Enter valid Mobile No.";
                         }
                     }
                 }
                 if (validationMsg.indexOf('Following') === -1) {
-                    validationMsg += '<span style="font-size:16px; font-weight:700;">Following items are required:</span>' + '<ul><li>' + msg + '</li>';
+                    validationMsg += '<span style="font-size:16px; font-weight:700;">Following items are required:</span><ul><li>' + msg + '</li>';
                 }
                 else {
                     validationMsg += '<li>' + msg + '</li>';
@@ -279,22 +279,36 @@ class UserInfo extends Component {
         }
         else {
             if (this.handleValidation()) {
-                axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
-                    'Content-Type': 'application/json'
-                })
-                    .then(
-                        this.setState({
-                            popupState: {
-                                ...this.state.popupState, message: "User information saved successfully.",
-                                isshow: true,
-                                redirect: true
-                            }
-                        })
-                    )
+                this.insertData();
             }
         }
     };
-
+    async insertData() {
+        const response = await axios.post('https://localhost:44374/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
+            'Content-Type': 'application/json'
+        })
+        const result = await response.data;
+        if (result > 0) {
+            this.setState({
+                popupState: {
+                    ...this.state.popupState,
+                    message: "User information saved successfully.",
+                    isshow: true,
+                    redirect: true
+                }
+            })
+        }
+        else {
+            this.setState({
+                popupState: {
+                    ...this.state.popupState,
+                    message: "An error has occurred. Please contact to your administrator.",
+                    isshow: true,
+                    redirect: false
+                }
+            })
+        }
+    }
     handleModelHide(e) {
         this.setState({
             popupState: {
