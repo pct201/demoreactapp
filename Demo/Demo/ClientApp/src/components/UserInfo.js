@@ -13,7 +13,7 @@ import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
 
 class UserInfo extends Component {
-
+    const API_URL = "http://192.168.2.44/Api/Employee/";
     constructor(props) {
         super(props);
         this.handleModelHide = this.handleModelHide.bind(this);
@@ -72,7 +72,7 @@ class UserInfo extends Component {
 
     componentDidMount = () => {
 
-        axios.get("http://192.168.2.44/Api/Employee/GetEducationList")
+        axios.get(API_URL+"GetEducationList")
             .then(result => {
                 this.setState({
                     otherState: {
@@ -84,7 +84,7 @@ class UserInfo extends Component {
 
         let userId = this.props.match.params.id;
         if (userId > 0) {
-            axios.get("http://192.168.2.44/Api/Employee/GetEmployeeDetailsById/" + userId)
+            axios.get(API_URL+"GetEmployeeDetailsById/" + userId)
                 .then(result => {
                     this.setState({
                         mainState: {
@@ -284,7 +284,7 @@ class UserInfo extends Component {
         }
     };
     async insertData() {
-        const response = await axios.post('http://192.168.2.44/Api/Employee/InsertEmployeeDetails', this.state.mainState, {
+        const response = await axios.post(API_URL + "InsertEmployeeDetails", this.state.mainState, {
             'Content-Type': 'application/json'
         })
         const result = await response.data;
