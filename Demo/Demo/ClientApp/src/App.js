@@ -8,5 +8,5 @@ export default () => (
     <Layout>
         <Route exact path={'/'} component={MainPage} />
         <Route exact path={'/UserInfo/:id?'} component={UserInfo} />
-  </Layout>
+    </Layout>
 );

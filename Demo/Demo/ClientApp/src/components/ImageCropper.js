@@ -3,8 +3,6 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import "../content/fontawesome/css/font-awesome.min.css";
 
-const src = 'img/child.jpg';
-
 export default class ImageCropper extends Component {
 
     constructor(props) {
@@ -135,7 +133,7 @@ export default class ImageCropper extends Component {
                                     <input type="file" onChange={this.onChange} className="sr-only cropper-input-file" id="inputImage" name="file" accept="image/*" />
                                     Browse
                             </label>
-                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className={this.props.imageSrc == "" ? "cus-button primary disabled" : "cus-button primary" } style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ & quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
+                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className={this.props.imageSrc === "" ? "cus-button primary disabled" : "cus-button primary" } style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ & quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
                                     Upload
                         </button>
                             </div>
