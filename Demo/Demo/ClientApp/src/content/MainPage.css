@@ -141,6 +141,7 @@
 .secondary, .secondary:focus {border-color: #007ba5 !important;color: #007ba5; background-color: #FFF;}
 .secondary:hover {border-color: #160b2f !important;color: #160b2f;}
 .primary, .primary:focus {background-color: #007ba5;border-color: #007ba5; color: #fff !important;}
+.primary.disabled {opacity: 0.6;}
 .docs-buttons { float:left; width:390px; }
 .docs-buttons .cus-button { font-weight:normal !important; padding-top:10px; min-width:46px; padding-left:5px !important; padding-right:5px !important; }
 .docs-buttons .cus-button .fa { padding-right:0px; }

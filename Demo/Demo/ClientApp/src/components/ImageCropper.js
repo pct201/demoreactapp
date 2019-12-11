@@ -20,6 +20,7 @@ export default class ImageCropper extends Component {
 
     onChange(e) {
         e.preventDefault();
+        this.refs.btnUploadCroppedImage.classList.remove("disabled");
         this.setState({ imageReady: false });
         let files;
         if (e.dataTransfer) {
@@ -37,7 +38,7 @@ export default class ImageCropper extends Component {
     }
 
     cropImage() {
-        if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
+        if (typeof this.cropper === 'undefined') {
             return;
         }
         const cropResult = this.cropper.getCroppedCanvas().toDataURL();
@@ -134,7 +135,7 @@ export default class ImageCropper extends Component {
                                     <input type="file" onChange={this.onChange} className="sr-only cropper-input-file" id="inputImage" name="file" accept="image/*" />
                                     Browse
                             </label>
-                                <button type="button" id="btnUploadCroppedImage" onClick={this.cropImage} className="cus-button primary" style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
+                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className="cus-button primary disabled" style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
                                     Upload
                         </button>
                             </div>
