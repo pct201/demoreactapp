@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import MainPage from './components/MainPage';
 import UserInfo from './components/UserInfo';
 
+require('dotenv').config()
+
 export default () => (
     <Layout>
         <Route exact path={'/'} component={MainPage} />

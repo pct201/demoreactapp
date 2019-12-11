@@ -12,8 +12,6 @@ import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
 
-const API_URL = "http://192.168.2.44/Api/Employee/";
-
 class UserInfo extends Component {
     constructor(props) {
         super(props);
@@ -73,7 +71,7 @@ class UserInfo extends Component {
 
     componentDidMount = () => {
 
-        axios.get(API_URL+"GetEducationList")
+        axios.get(process.env.REACT_APP_API_URL+"GetEducationList")
             .then(result => {
                 this.setState({
                     otherState: {
@@ -85,7 +83,7 @@ class UserInfo extends Component {
 
         let userId = this.props.match.params.id;
         if (userId > 0) {
-            axios.get(API_URL+"GetEmployeeDetailsById/" + userId)
+            axios.get(process.env.REACT_APP_API_URL+"GetEmployeeDetailsById/" + userId)
                 .then(result => {
                     this.setState({
                         mainState: {
@@ -285,7 +283,7 @@ class UserInfo extends Component {
         }
     };
     async insertData() {
-        const response = await axios.post(API_URL + "InsertEmployeeDetails", this.state.mainState, {
+        const response = await axios.post(process.env.REACT_APP_API_URL + "InsertEmployeeDetails", this.state.mainState, {
             'Content-Type': 'application/json'
         })
         const result = await response.data;
