@@ -11,7 +11,7 @@ class ImageCropperPopup extends Component {
                     <Modal.Title>Profile Picture</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ImageCropper onUploadImage={(result) => { this.props.onUploadImage(result) }} />
+                    <ImageCropper onUploadImage={(result) => { this.props.onUploadImage(result) }} imageSrc={this.props.imageSrc} />
                 </Modal.Body>
                 <Modal.Footer>
                     <input type="button" className="cus-button primary" value="OK" onClick={this.props.popupClose} />

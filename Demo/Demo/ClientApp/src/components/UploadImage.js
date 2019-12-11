@@ -26,7 +26,7 @@ class UploadImage extends Component {
                         </div>
                     </div>
                 </div>
-                <ImageCropperPopup show={this.props.isShowImageCropperPopup} popupClose={this.props.handleModelHide}
+                <ImageCropperPopup show={this.props.isShowImageCropperPopup} popupClose={this.props.handleModelHide} imageSrc={this.props.cropResult != null ? this.props.cropResult : ""}
                     onUploadImage={(result) => { this.props.uploadCroppedImage(result) }} />
             </div>
 

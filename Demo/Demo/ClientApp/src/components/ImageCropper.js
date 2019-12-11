@@ -10,8 +10,8 @@ export default class ImageCropper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            src,
-            imageReady: false
+            src: props.imageSrc,
+            imageReady: true
         };
         this.cropImage = this.cropImage.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -135,7 +135,7 @@ export default class ImageCropper extends Component {
                                     <input type="file" onChange={this.onChange} className="sr-only cropper-input-file" id="inputImage" name="file" accept="image/*" />
                                     Browse
                             </label>
-                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className="cus-button primary disabled" style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
+                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className={this.props.imageSrc == "" ? "cus-button primary disabled" : "cus-button primary" } style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ & quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
                                     Upload
                         </button>
                             </div>
