@@ -13,7 +13,7 @@ export default class UserList extends Component {
         super(props);
         this.state = {
             reload: false,
-            warningMsg: "Are you to delete selected record?",
+            warningMsg: "Do you want to proceed deleting the user?",
             isShow: false,
             error: false,
             errorMsg: "Please select at least one record to delete",
@@ -130,6 +130,12 @@ export default class UserList extends Component {
                         if ($('#main').find('td >input:checkbox').length === $('#main').find('td >input:checkbox:checked').length) {
                             $('#main').find('th > input:checkbox').prop('checked', true);
                         }
+                    }
+                });
+
+                $('#main_paginate a').on("click", function (e) {
+                    if (!$(this).hasClass('current')) {
+                        $('#main').find('input:checkbox').prop('checked', false);
                     }
                 });
             },
