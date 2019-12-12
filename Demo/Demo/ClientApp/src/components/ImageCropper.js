@@ -3,15 +3,13 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import "../content/fontawesome/css/font-awesome.min.css";
 
-const src = 'img/child.jpg';
-
 export default class ImageCropper extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            src,
-            imageReady: false
+            src: props.imageSrc,
+            imageReady: true
         };
         this.cropImage = this.cropImage.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -20,7 +18,6 @@ export default class ImageCropper extends Component {
 
     onChange(e) {
         e.preventDefault();
-        this.refs.btnUploadCroppedImage.classList.remove("disabled");
         this.setState({ imageReady: false });
         let files;
         if (e.dataTransfer) {
@@ -38,7 +35,7 @@ export default class ImageCropper extends Component {
     }
 
     cropImage() {
-        if (typeof this.cropper === 'undefined') {
+        if (typeof this.cropper === 'undefined' || this.refs.btnUploadCroppedImage.classList.contains("disabled")) {
             return;
         }
         const cropResult = this.cropper.getCroppedCanvas().toDataURL();
@@ -46,8 +43,20 @@ export default class ImageCropper extends Component {
     }
 
     _crop() {
-        this.refs.dataWidth.value = this.cropper.getCroppedCanvas().width;
-        this.refs.dataHeight.value = this.cropper.getCroppedCanvas().height;
+        let width = this.cropper.getCroppedCanvas().width;
+        let height = this.cropper.getCroppedCanvas().height;
+        this.refs.dataWidth.value = width;
+        this.refs.dataHeight.value = height;
+        if (width <= 400 && height <= 138) {
+            this.refs.btnUploadCroppedImage.classList.remove("disabled");
+            this.refs.dataWidth.classList.remove("input-validation-error");
+            this.refs.dataHeight.classList.remove("input-validation-error");
+        }
+        else {
+            this.refs.btnUploadCroppedImage.classList.add("disabled");
+            this.refs.dataWidth.classList.add("input-validation-error");
+            this.refs.dataHeight.classList.add("input-validation-error");
+        }
     }
 
     croppedImage(result) {
@@ -135,7 +144,7 @@ export default class ImageCropper extends Component {
                                     <input type="file" onChange={this.onChange} className="sr-only cropper-input-file" id="inputImage" name="file" accept="image/*" />
                                     Browse
                             </label>
-                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className="cus-button primary disabled" style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
+                                <button type="button" id="btnUploadCroppedImage" ref="btnUploadCroppedImage" onClick={this.cropImage} className={this.props.imageSrc === "" ? "cus-button primary disabled" : "cus-button primary" } style={{ "cursor": "pointer" }} data-method="getCroppedCanvas" data-option="{ & quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
                                     Upload
                         </button>
                             </div>

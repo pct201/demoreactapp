@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "datatables.net": "^1.10.20",
+    "dotenv": "^8.2.0",
     "jquery": "^3.4.1"
   }
 }

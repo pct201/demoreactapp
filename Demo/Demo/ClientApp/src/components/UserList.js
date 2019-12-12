@@ -25,7 +25,7 @@ export default class UserList extends Component {
     }
 
     async bindUserTable() {
-        let res = await axios.get("https://localhost:44374/Api/Employee/AllEmployeeDetails");
+        let res = await axios.get(process.env.REACT_APP_API_URL+"AllEmployeeDetails");
         $(this.refs.main).DataTable({
             dom: '<"top"l>rt<"bottom"ip><"clear">',
             data: res.data,
@@ -210,7 +210,7 @@ export default class UserList extends Component {
             }
         }
         console.log(JSON.stringify(userIds));
-        axios.delete("http://192.168.2.44/Api/Employee/DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
+        axios.delete(process.env.REACT_APP_API_URL+"DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
             if (result.status === 200) {
                 this.setState({
                     reload: true,

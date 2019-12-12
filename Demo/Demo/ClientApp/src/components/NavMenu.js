@@ -7,7 +7,7 @@ export default props => (
   <Navbar inverse fixedTop fluid collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
-                <span>React App</span>
+                <span>React Demo App</span>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
