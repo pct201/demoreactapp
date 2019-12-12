@@ -10,7 +10,8 @@ import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
-
+import 'rc-datepicker/lib/style.css';
+import { DatePickerInput } from 'rc-datepicker';
 
 
 class UserInfo extends Component {
@@ -74,7 +75,7 @@ class UserInfo extends Component {
 
     componentDidMount = () => {
 
-        axios.get(process.env.REACT_APP_API_URL+"GetEducationList")
+        axios.get(process.env.REACT_APP_API_URL + "GetEducationList")
             .then(result => {
                 this.setState({
                     otherState: {
@@ -86,7 +87,7 @@ class UserInfo extends Component {
 
         let userId = this.props.match.params.id;
         if (userId > 0) {
-            axios.get(process.env.REACT_APP_API_URL+"GetEmployeeDetailsById/" + userId)
+            axios.get(process.env.REACT_APP_API_URL + "GetEmployeeDetailsById/" + userId)
                 .then(result => {
                     this.setState({
                         mainState: {
@@ -347,7 +348,7 @@ class UserInfo extends Component {
             }
         });
     }
-    
+
     render() {
         const { error } = this.state;
         let deleteStyle = {
@@ -404,13 +405,18 @@ class UserInfo extends Component {
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Salary :</label>
-                                    <input type="text" className={error.salary ? "input-validation-error form-control required" : "required form-control"} id="salary" ref="salary" additional_validation="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="salary"/>
+                                    <input type="text" className={error.salary ? "input-validation-error form-control required" : "required form-control"} id="salary" ref="salary" additional_validation="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="salary" />
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Birth Date :</label>
-                                    
+                                    <DatePickerInput
+                                        onChange={this.handleDatepickerChange}
+                                        value={this.state.mainState.birth_date}
+                                        displayFormat='YYYY-MM-DD'
+                                        ref="birth_date"
+                                        id="birth_date"/>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
