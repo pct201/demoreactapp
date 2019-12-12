@@ -15,6 +15,7 @@ import { DatePickerInput } from 'rc-datepicker';
 
 
 class UserInfo extends Component {
+
     constructor(props) {
         super(props);
         this.handleModelHide = this.handleModelHide.bind(this);
@@ -58,7 +59,6 @@ class UserInfo extends Component {
             message: "",
             isshow: false
         }
-
     }
 
     componentDidUpdate(nextProps) {
@@ -74,7 +74,6 @@ class UserInfo extends Component {
     }
 
     componentDidMount = () => {
-
         axios.get(process.env.REACT_APP_API_URL + "GetEducationList")
             .then(result => {
                 this.setState({
@@ -125,7 +124,6 @@ class UserInfo extends Component {
                 }
             })
         }
-
     }
 
     uploadFile = (event) => {
@@ -221,9 +219,6 @@ class UserInfo extends Component {
                         else if (this.refs[key].attributes.additional_validation.value === "salary") {
                             return !validator.isInt(value.toString());
                         }
-                        else if (this.refs[key].attributes.additional_validation.value === "birth_date") {
-                            return !validator.toDate(value);
-                        }
                     }
                     else {
                         return validator.isEmpty(value);
@@ -235,7 +230,7 @@ class UserInfo extends Component {
                 if (this.refs[key].hasAttribute("additional_validation")) {
                     if (this.refs[key].attributes.additional_validation.value === "email") {
                         if (value !== "") {
-                            msg = "Enter valid email";
+                            msg = "Enter valid Email";
                         }
                     }
                     else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
@@ -245,12 +240,7 @@ class UserInfo extends Component {
                     }
                     else if (this.refs[key].attributes.additional_validation.value === "salary") {
                         if (value !== "") {
-                            msg = "Enter valid salary";
-                        }
-                    }
-                    else if (this.refs[key].attributes.additional_validation.value === "birth_date") {
-                        if (value !== null) {
-                            msg = "Enter valid Birth date";
+                            msg = "Enter valid Salary";
                         }
                     }
                 }
@@ -301,6 +291,7 @@ class UserInfo extends Component {
             }
         }
     };
+
     async insertData() {
         const response = await axios.post(process.env.REACT_APP_API_URL + "InsertEmployeeDetails", this.state.mainState, {
             'Content-Type': 'application/json'
@@ -327,6 +318,7 @@ class UserInfo extends Component {
             })
         }
     }
+
     handleModelHide(e) {
         this.setState({
             popupState: {
@@ -351,6 +343,7 @@ class UserInfo extends Component {
 
     render() {
         const { error } = this.state;
+
         let deleteStyle = {
             display: this.state.otherState.isDeleteShow ? "block" : "none"
         }
@@ -388,7 +381,7 @@ class UserInfo extends Component {
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Mobile No. :</label>
-                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} error_msg="Mobile number" />
+                                    <input type="phone" className={error.mobile_number ? "input-validation-error form-control required" : "required form-control"} additional_validation="mobile_number" id="mobile_number" ref="mobile_number" value={this.state.mainState.mobile_number} onChange={this.handleInputChange} error_msg="Mobile Number" />
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
@@ -405,7 +398,7 @@ class UserInfo extends Component {
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Salary :</label>
-                                    <input type="text" className={error.salary ? "input-validation-error form-control required" : "required form-control"} id="salary" ref="salary" additional_validation="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="salary" />
+                                    <input type="text" className={error.salary ? "input-validation-error form-control required" : "required form-control"} id="salary" ref="salary" additional_validation="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="Salary" />
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
@@ -416,7 +409,7 @@ class UserInfo extends Component {
                                         value={this.state.mainState.birth_date}
                                         displayFormat='YYYY-MM-DD'
                                         ref="birth_date"
-                                        id="birth_date"/>
+                                        id="birth_date" readOnly/>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
@@ -434,10 +427,6 @@ class UserInfo extends Component {
                             </div>
                         </div>
                     </div>
-
-
-
-
                     <br />
                     <div className="form-group">
                         <label >Blog:</label>
@@ -469,7 +458,6 @@ class UserInfo extends Component {
                             </div>
                         </div>
                     </div>
-
                     <br />
                     {((this.state.mainState.userId) <= 0) ?
                         <div className="termsAndCond">
@@ -480,7 +468,6 @@ class UserInfo extends Component {
                         </div>
                         : ""
                     }
-
                     <div>
                         <input type="button" className="cus-button primary" value="Save" style={{ "marginRight": "1%" }} onClick={this.handleOnSubmit} />
                         <input type="button" className="cus-button secondary" value="Cancel" onClick={() => this.handleCancel()} />
