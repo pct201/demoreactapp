@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
 import axios from 'axios';
-import DatePicker from "react-16-bootstrap-date-picker";
 import Summernote from './Summernote';
 import UploadImage from './UploadImage';
 import { connect } from 'react-redux';
@@ -11,6 +10,8 @@ import { actionCreators } from '../store/UploadImage';
 import "../content/fontawesome/css/font-awesome.min.css";
 import WarningPopup from './WarningPopup';
 import ReactHtmlParser from "react-html-parser";
+
+
 
 class UserInfo extends Component {
 
@@ -41,6 +42,8 @@ class UserInfo extends Component {
             last_name: false,
             email: false,
             mobile_number: false,
+            salary: false,
+            birth_date: false
         },
         otherState: {
             fileName: "No file selected",
@@ -154,8 +157,7 @@ class UserInfo extends Component {
         this.setState({
             mainState: {
                 ...this.state.mainState,
-                birth_date: value,
-                formattedValue: formattedValue
+                birth_date: formattedValue
             }
         });
     }
@@ -216,6 +218,12 @@ class UserInfo extends Component {
                         else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
                             return !validator.isMobilePhone(value, 'en-CA');
                         }
+                        else if (this.refs[key].attributes.additional_validation.value === "salary") {
+                            return !validator.isInt(value.toString());
+                        }
+                        else if (this.refs[key].attributes.additional_validation.value === "birth_date") {
+                            return !validator.toDate(value);
+                        }
                     }
                     else {
                         return validator.isEmpty(value);
@@ -233,6 +241,16 @@ class UserInfo extends Component {
                     else if (this.refs[key].attributes.additional_validation.value === "mobile_number") {
                         if (value !== "") {
                             msg = "Enter valid Mobile No.";
+                        }
+                    }
+                    else if (this.refs[key].attributes.additional_validation.value === "salary") {
+                        if (value !== "") {
+                            msg = "Enter valid salary";
+                        }
+                    }
+                    else if (this.refs[key].attributes.additional_validation.value === "birth_date") {
+                        if (value !== null) {
+                            msg = "Enter valid Birth date";
                         }
                     }
                 }
@@ -330,7 +348,7 @@ class UserInfo extends Component {
             }
         });
     }
-
+    
     render() {
         const { error } = this.state;
         let deleteStyle = {
@@ -387,13 +405,13 @@ class UserInfo extends Component {
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Salary :</label>
-                                    <input type="text" className="form-control" id="salary" ref="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} />
+                                    <input type="text" className={error.salary ? "input-validation-error form-control required" : "required form-control"} id="salary" ref="salary" additional_validation="salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="salary"/>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
                                 <div className="form-group">
                                     <label className="col-form-label">Birth Date :</label>
-                                    <DatePicker id="birth_date" value={this.state.mainState.birth_date} onChange={this.handleDatepickerChange} dateFormat="YYYY-MM-DD" showClearButton={false} disableEntry={true} className="fa fa-calendar" />
+                                    
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4">
