@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import axios from 'axios';
 import ConfirmationPopup from './ConfirmationPopup';
 import WarningPopup from './WarningPopup';
+import '../content/MainPage.css';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
@@ -25,7 +26,7 @@ export default class UserList extends Component {
     }
 
     async bindUserTable() {
-        let res = await axios.get(process.env.REACT_APP_API_URL+"AllEmployeeDetails");
+        let res = await axios.get(process.env.REACT_APP_API_URL + "AllEmployeeDetails");
         $(this.refs.main).DataTable({
             dom: '<"top"l>rt<"bottom"ip><"clear">',
             data: res.data,
@@ -33,9 +34,6 @@ export default class UserList extends Component {
             columns: [
                 {
                     title: "<input type='checkbox' className='togBtn' id='selectall' ref='selectall' name='selectall'>", data: "userId",
-                    //render: function (data, type, row) {
-                    //    return "<input type='checkbox' class='togBtn' onChange=\"selectCheckbox(this);\" id= " + row.userId + ">";
-                    //}
                     createdCell: (td, cellData, rowData, row, col) => {
                         ReactDOM.render(<input type='checkbox' className='togBtn' id={rowData.userId} />, td);
                     }
@@ -47,28 +45,29 @@ export default class UserList extends Component {
                 { data: "education_Name", title: "Education" },
                 { data: "salary", title: "Salary" },
                 {
-                    data: "birth_Date", title: "Birth Date", render: function (data, type, row) {                       
+                    data: "birth_Date", title: "Birth Date", render: function (data, type, row) {
                         var dt = new Date(data);
                         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                         ];
-                        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());                                         
+                        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
                     }
                 },
                 {
                     data: "is_Married", title: "Married", render: function (data, type, row) {
-                      
+
                         if (data) return 'Yes';
                         else return 'No';
                     }
                 },
                 { data: "address", title: "Address" },
                 {
-                    data: "updated_date", title: "Updated On", render: function (data, type, row) {                       
+                    data: "updated_date", title: "Updated On", render: function (data, type, row) {
                         var dt = new Date(data);
                         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                         ];
                         return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear() + " " + dt.getHours() + ":" + (dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes()) + ":" + (dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds()));
-                    }}
+                    }
+                }
             ],
             autoWidth: false,
             processing: false,
@@ -140,16 +139,16 @@ export default class UserList extends Component {
                 });
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr("id", aData['userId']);             
+                $(nRow).attr("id", aData['userId']);
                 return nRow;
-            }     
+            }
         });
         // on click event for edit clause
-        $('#main tbody').on('click', 'td', function (i, e) {            
+        $('#main tbody').on('click', 'td', function (i, e) {
             if (this.cellIndex !== 0) {
                 var userId = $(this).parent().attr("id");
                 if (userId !== undefined && userId !== null) {
-                    window.location.href = '/userinfo/'+ userId;
+                    window.location.href = '/userinfo/' + userId;
                 }
             }
         });
@@ -210,7 +209,7 @@ export default class UserList extends Component {
             }
         }
         console.log(JSON.stringify(userIds));
-        axios.delete(process.env.REACT_APP_API_URL+"DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
+        axios.delete(process.env.REACT_APP_API_URL + "DeleteEmployee?ids=" + JSON.stringify(userIds)).then(result => {
             if (result.status === 200) {
                 this.setState({
                     reload: true,
@@ -235,18 +234,23 @@ export default class UserList extends Component {
 
     render() {
         return (
-            <div>
-                <div className="button-holder">
-                    <button className="cus-button primary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteConfirmation} >Delete</button>
-                    <button className="cus-button secondary" style={{ "marginLeft": "15px", "float": "right" }} onClick={() => window.location.href='/userInfo'} >Add</button>
+            <div className="container-fluid">
+                <div className="user-list">
+                    <div className="page-header">
+                        <h2><strong>Manage Users</strong></h2>
+                    </div>
+                    <div className="button-holder">
+                        <button className="cus-button primary" style={{ "marginLeft": "15px", "float": "right" }} onClick={this.deleteConfirmation} >Delete</button>
+                        <button className="cus-button secondary" style={{ "marginLeft": "15px", "float": "right" }} onClick={() => window.location.href = '/userInfo'} >Add</button>
 
+                    </div>
+                    <div className="table-resposive">
+                        <table ref="main" id="main" className="darkgrid table table-bordered table-hover">
+                        </table>
+                    </div>
+                    <ConfirmationPopup show={this.state.isShow} message={this.state.warningMsg} actionFunction={this.deleteUser} popupClose={this.handleModelHide} />
+                    <WarningPopup show={this.state.error} message={this.state.errorMsg} popupClose={this.handleModelHide} />
                 </div>
-                <div className="table-resposive">
-                    <table ref="main" id="main" className="darkgrid table table-bordered table-hover">
-                    </table>
-                </div>
-                <ConfirmationPopup show={this.state.isShow} message={this.state.warningMsg} actionFunction={this.deleteUser} popupClose={this.handleModelHide} />
-                <WarningPopup show={this.state.error} message={this.state.errorMsg} popupClose={this.handleModelHide} />
             </div>
         )
     }
