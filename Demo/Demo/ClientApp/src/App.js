@@ -2,13 +2,14 @@
 import { Route } from 'react-router';
 import Layout from './components/Layout';
 import UserInfo from './components/UserInfo';
-import UserList from './components/UserList';
-
+import UserList from './components/UserList'; 
+import Login from './components/Login';
 require('dotenv').config()
 
 export default () => (
     <Layout>
         <Route exact path={'/'} component={UserList} />
         <Route exact path={'/UserInfo/:id?'} component={UserInfo} />
+        <Route exact path={'/Login'} component={Login} />
     </Layout>
 );

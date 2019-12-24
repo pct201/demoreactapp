@@ -18,7 +18,14 @@ export default props => (
             <Glyphicon glyph='home' /> Manage User
           </NavItem>
         </LinkContainer>       
-      </Nav>
+            </Nav>
+            <Nav>
+                <LinkContainer to={'/Login'} exact>
+                    <NavItem>
+                        <Glyphicon glyph='home' /> Login
+          </NavItem>
+                </LinkContainer>
+            </Nav>
     </Navbar.Collapse>
   </Navbar>
 );

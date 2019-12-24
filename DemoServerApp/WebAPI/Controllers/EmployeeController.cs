@@ -132,5 +132,23 @@ namespace WebAPI.Controllers
             else
                 return false;
         }
+
+
+        // GET api/values
+        [HttpPost]
+        [Route("api/Employee/Login")]
+        public bool Login(string username,string password)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
     }
 }
