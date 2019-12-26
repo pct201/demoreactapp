@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DocumentController : ControllerBase
     {
@@ -23,9 +23,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                using (var documetnService = new DocumentTemplateService())
+                using (var documentService = new DocumentTemplateService())
                 {
-                    IList<DocumentTemplateModel> documentList = documetnService.GetTemplateList(language, regionUid, documentTypeId, companyId, product_uid);
+                    IList<DocumentTemplateModel> documentList = documentService.GetTemplateList(language, regionUid, documentTypeId, companyId, product_uid);
                     return documentList;
                 }
             }
@@ -36,23 +36,31 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        public IList<DocumentTypeTemplateModel> BindDocumentTypeDDL(string productUid = null)
+        {
+            using (var documentService = new DocumentTemplateService())
+                return documentService.GetDocumentTypeListForDropdown(productUid);
+          
+        }
+        
+        [HttpGet]
         public IList<SelectListItem> BindRegionDDL(string productUid)
         {
-            using (var documetnService = new DocumentTemplateService())          
-                return documetnService.GetRegionListForDropdown(productUid);            
+            using (var documentService = new DocumentTemplateService())          
+                return documentService.GetRegionListForDropdown(productUid);            
         }
 
         [HttpGet]
         public IList<SelectListItem> BindLanguageDDL(string productUid)
         {
-            using (var documetnService = new DocumentTemplateService())           
-                return documetnService.GetLanguageListForDropdown(productUid);          
+            using (var documentService = new DocumentTemplateService())           
+                return documentService.GetLanguageListForDropdown(productUid);          
         }
 
         public List<SelectListItem> BindBrokerCompaniesDDL(int documentTypeId, string languageCode, string regionUid, string productUid)
         {
-            using (var documetnService = new DocumentTemplateService())
-                return documetnService.GetBrokerCompaniesHasTemplate(documentTypeId, languageCode, regionUid, productUid).ToList();           
+            using (var documentService = new DocumentTemplateService())
+                return new List<SelectListItem>() ;           
         }
         #endregion
 
@@ -65,9 +73,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                using (var documetnService = new DocumentTemplateService())
+                using (var documentService = new DocumentTemplateService())
                 {
-                    documetnService.SaveTemplateContent(languageCode, regionUid, companyId, templateUid, templateContent, fileName, updatedBy, productUid);
+                    documentService.SaveTemplateContent(languageCode, regionUid, companyId, templateUid, templateContent, fileName, updatedBy, productUid);
                 }
             }
             catch (Exception e)
@@ -82,9 +90,9 @@ namespace WebAPI.Controllers
 
         public string Download(string templateId, string language, string regionUid, int companyId, string productUid)
         {
-            using (var documetnService = new DocumentTemplateService())
+            using (var documentService = new DocumentTemplateService())
             {
-                DocumentTemplateModel objTemplatetextModel = documetnService.GetDocumetTemplateContentByTemplateName(null, language, null, productUid, companyId, templateId, regionUid).FirstOrDefault();
+                DocumentTemplateModel objTemplatetextModel = documentService.GetDocumetTemplateContentByTemplateName(null, language, null, productUid, companyId, templateId, regionUid).FirstOrDefault();
                 if (objTemplatetextModel != null && objTemplatetextModel.template_content != null)
                 {                   
                     string templatefilename = !string.IsNullOrEmpty(objTemplatetextModel.Template_name) ? objTemplatetextModel.Template_name + ".html"  : "output_document_template.html";
@@ -102,9 +110,9 @@ namespace WebAPI.Controllers
         #region View Template
         public string GetTemplateTextByTemplateId(string templateId, string language, string regionUid, int companyId, string productUid)
         {
-            using (var documetnService = new DocumentTemplateService())
+            using (var documentService = new DocumentTemplateService())
             {
-                DocumentTemplateModel objTemplatetextModel = documetnService.GetDocumetTemplateContentByTemplateName(null, language, null, productUid, companyId, templateId, regionUid).FirstOrDefault();
+                DocumentTemplateModel objTemplatetextModel = documentService.GetDocumetTemplateContentByTemplateName(null, language, null, productUid, companyId, templateId, regionUid).FirstOrDefault();
                 if (objTemplatetextModel != null && !string.IsNullOrEmpty(objTemplatetextModel.template_content))
                 {
                     var result = new { TemplateContent = WebUtility.HtmlDecode(objTemplatetextModel.template_content), errormsg = "" };

@@ -67,8 +67,8 @@ namespace ICSB.Business.Services
         /// <returns></returns>
         public virtual IList<DocumentTemplateModel> GetDocumetTemplateContentByTemplateName(string templateName, string languageCode, string country_code, string productUid, int companyId, string tamplateUid = null,string region_uid= null)
         {
-            if (string.IsNullOrEmpty(productUid))
-                return new List<DocumentTemplateModel>();
+            //if (string.IsNullOrEmpty(productUid))
+            //    return new List<DocumentTemplateModel>();
 
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
 
@@ -123,6 +123,13 @@ namespace ICSB.Business.Services
             return this.ExecuteProcedure<DocumentTemplateModel>("[doc].[document_templatelist_get]", parameters).ToList();
             //return this.ExecuteProcedure<DocumentTemplateModel>("[doc].[document_templatelist_get]", parameters, productUid).ToList();
         }
+
+        public virtual IList<DocumentTypeTemplateModel> GetDocumentTypeListForDropdown(string productId)
+        {
+            return ExecuteProcedurewithoutPagination<DocumentTypeTemplateModel>("[doc].[document_types_get]");
+            //return ExecuteProcedurewithoutPagination<SelectListItem>("[doc].[country_get]", productId);
+        }
+
 
         public virtual IList<SelectListItem> GetCountryListForDropdown(string productId)
         {

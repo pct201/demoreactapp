@@ -89,6 +89,8 @@ namespace ICSB.Business.Models
         /// </summary>
         public DateTime? Updated_date { get; set; }
 
+        public int total_records { get; set; }
+
         #endregion
 
     }
