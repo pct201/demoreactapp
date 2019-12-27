@@ -52,7 +52,7 @@ export default class DocumentTemplateLIst extends Component {
 
 
     bindDocumentType = () => {
-        axios.get("https://localhost:44374/api/Document/BindDocumentTypeDDL")
+        axios.get(process.env.REACT_APP_API_URL +"Document/BindDocumentTypeDDL")
             .then(result => {
                 this.setState({
                     ...this.state,
@@ -70,7 +70,7 @@ export default class DocumentTemplateLIst extends Component {
         if (isCountrySpecific === "true") {
             $("#regionUid").show();
             $("#regionddldiv").show();
-            axios.get("https://localhost:44374/api/Document/BindRegionDDL")
+            axios.get(process.env.REACT_APP_API_URL +"Document/BindRegionDDL")
                 .then(result => {
                     this.setState({
                         ...this.state,
@@ -87,7 +87,7 @@ export default class DocumentTemplateLIst extends Component {
         }
     }
     bindLanguage = () => {
-        axios.get("https://localhost:44374/api/Document/BindLanguageDDL")
+        axios.get(process.env.REACT_APP_API_URL+"Document/BindLanguageDDL")
             .then(result => {
                 this.setState({
                     ...this.state,
@@ -97,7 +97,7 @@ export default class DocumentTemplateLIst extends Component {
             })
     }
     bindComapany = () => {
-        //axios.get("https://localhost:44374/api/Document/BindBrokerCompaniesDDL")
+        //axios.get(process.env.REACT_APP_API_URL+"Document/BindBrokerCompaniesDDL")
         //    .then(result => {
         //        this.setState({
         //            ...this.state,
@@ -112,7 +112,7 @@ export default class DocumentTemplateLIst extends Component {
     }
 
     viewtemplate = (templateUid) => {
-        axios.get("https://localhost:44374/api/Document/GetTemplateTextByTemplateId", { params: { templateId: templateUid, language: this.state.languageCode, regionUid: this.state.regionUid, product_uid: null, companyId: this.state.companyId } })
+        axios.get(process.env.REACT_APP_API_URL+"Document/GetTemplateTextByTemplateId", { params: { templateId: templateUid, language: this.state.languageCode, regionUid: this.state.regionUid, product_uid: null, companyId: this.state.companyId } })
             .then(result => {
                 //window.open(result.data.TemplateContent, "_blank")
                 var newWindow = window.open();
@@ -121,7 +121,7 @@ export default class DocumentTemplateLIst extends Component {
     }
 
     downloadFile = (templateUid) => {
-        axios.get("https://localhost:44374/api/Document/Download", { params: { templateId: templateUid, language: this.state.languageCode, regionUid: this.state.regionUid, product_uid: null, companyId: this.state.companyId } })
+        axios.get(process.env.REACT_APP_API_URL+"Document/Download", { params: { templateId: templateUid, language: this.state.languageCode, regionUid: this.state.regionUid, product_uid: null, companyId: this.state.companyId } })
             .then(result => {
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(new Blob([result.data.templateContent]));
@@ -142,7 +142,7 @@ export default class DocumentTemplateLIst extends Component {
     }
 
     async bindDocumentTemplateTable() {
-        let res = await axios.get("https://localhost:44374/api/Document/BindTemplateList", { params: { language: this.state.languageCode, regionUid: this.state.regionUid, documentTypeId: this.state.documentTypeId, product_uid: null, companyId: this.state.companyId } }, {
+        let res = await axios.get(process.env.REACT_APP_API_URL+"Document/BindTemplateList", { params: { language: this.state.languageCode, regionUid: this.state.regionUid, documentTypeId: this.state.documentTypeId, product_uid: null, companyId: this.state.companyId } }, {
             'Content-Type': 'application/json'
         });
         $(this.refs.main).DataTable({

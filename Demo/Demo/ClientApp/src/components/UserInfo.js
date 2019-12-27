@@ -74,7 +74,7 @@ class UserInfo extends Component {
     }
 
     componentDidMount = () => {
-        axios.get(process.env.REACT_APP_API_URL + "GetEducationList")
+        axios.get(process.env.REACT_APP_API_URL + "Employee/GetEducationList")
             .then(result => {
                 this.setState({
                     otherState: {
@@ -86,7 +86,7 @@ class UserInfo extends Component {
 
         let userId = this.props.match.params.id;
         if (userId > 0) {
-            axios.get(process.env.REACT_APP_API_URL + "GetEmployeeDetailsById/" + userId)
+            axios.get(process.env.REACT_APP_API_URL + "Employee/GetEmployeeDetailsById/" + userId)
                 .then(result => {
                     this.setState({
                         mainState: {
@@ -293,7 +293,7 @@ class UserInfo extends Component {
     };
 
     async insertData() {
-        const response = await axios.post(process.env.REACT_APP_API_URL + "InsertEmployeeDetails", this.state.mainState, {
+        const response = await axios.post(process.env.REACT_APP_API_URL + "Employee/InsertEmployeeDetails", this.state.mainState, {
             'Content-Type': 'application/json'
         })
         const result = await response.data;
