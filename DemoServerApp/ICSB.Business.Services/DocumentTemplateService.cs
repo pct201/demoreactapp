@@ -39,8 +39,8 @@ namespace ICSB.Business.Services
         /// <returns></returns>
         public bool SaveTemplateContent(string languageCode, string regionUid, int companyId, string templateUid, string templateContent,string fileName, int updatedBy, string productUid)
         {
-            if (string.IsNullOrEmpty(productUid))
-                return false;
+            //if (string.IsNullOrEmpty(productUid))
+            //    return false;
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
             parameters.Add(new DBParameters() { Name = "@template_uid", Value = templateUid, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });

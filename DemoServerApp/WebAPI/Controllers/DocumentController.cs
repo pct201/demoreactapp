@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WebAPI.Controllers
 {
@@ -67,20 +68,16 @@ namespace WebAPI.Controllers
         #region Edit Template
 
         [HttpPost]
-        [AllowAnonymous]      
-        [ValidateAntiForgeryToken]
-        public void EditTemplate(string languageCode, string regionUid, int companyId, string templateUid, string templateContent, string fileName, int updatedBy=1, string productUid=null)
+        public bool EditTemplate([FromBody]JObject templateObj)
         {
             try
             {
                 using (var documentService = new DocumentTemplateService())
-                {
-                    documentService.SaveTemplateContent(languageCode, regionUid, companyId, templateUid, templateContent, fileName, updatedBy, productUid);
-                }
+                    return documentService.SaveTemplateContent(Convert.ToString(templateObj["languageCode"]), Convert.ToString(templateObj["regionUid"]), Convert.ToInt32(templateObj["companyId"]), Convert.ToString(templateObj["templateUid"]), WebUtility.HtmlEncode(Convert.ToString(templateObj["templateContent"])), Convert.ToString(templateObj["fileName"]), 1, null);
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return false;
             }
         }
 
