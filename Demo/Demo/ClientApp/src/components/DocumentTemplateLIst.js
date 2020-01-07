@@ -376,7 +376,7 @@ export default class DocumentTemplateLIst extends Component {
         if (this.handleValidation()) {
             if (this.state.uploadedFileName.split('.').pop() === "html") {
                 let jsonData = { "languageCode": this.state.languageCode, "regionUid": this.state.regionUid, "companyId": this.state.companyId, "templateUid": this.state.templateUid, "templateContent": this.state.document, "fileName": this.state.filename }
-                await axios.post('https://localhost:44374/api/Document/EditTemplate', jsonData, {
+                await axios.post(process.env.REACT_APP_API_URL+"Document//EditTemplate", jsonData, {
                     'Content-Type': 'application/json'
                 }).then(result => {
                     if (result.data) {
